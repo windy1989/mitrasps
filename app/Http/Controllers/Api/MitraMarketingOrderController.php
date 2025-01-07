@@ -108,21 +108,23 @@ class MitraMarketingOrderController extends Controller
 
                         if(!$querycheck){
                             $query = MitraMarketingOrder::create([
-                                'code'          => $newCode,
-                                'user_id'       => $cek->id,
-                                'account_id'    => $customer->id,
-                                'type'          => $request->type,
-                                'post_date'     => $request->post_date,
-                                'valid_date'    => $request->valid_date,
-                                'document_no'   => $request->document_no,
-                                'type_delivery' => $request->type_delivery,
-                                'payment_type'  => $request->payment_type,
-                                'dp_type'       => $request->dp_type ?? NULL,
-                                'note'          => $request->note,
-                                'total'         => $request->total,
-                                'tax'           => $request->tax,
-                                'grandtotal'    => $request->grandtotal,
-                                'status'        => '1',
+                                'code'              => $newCode,
+                                'user_id'           => $cek->id,
+                                'account_id'        => $customer->id,
+                                'type'              => $request->type,
+                                'post_date'         => $request->post_date,
+                                'valid_date'        => $request->valid_date,
+                                'document_no'       => $request->document_no,
+                                'type_delivery'     => $request->type_delivery,
+                                'delivery_date'     => $request->delivery_date,
+                                'delivery_schedule' => $request->delivery_schedule,
+                                'payment_type'      => $request->payment_type,
+                                'dp_type'           => $request->dp_type ?? NULL,
+                                'note'              => $request->note,
+                                'total'             => $request->total,
+                                'tax'               => $request->tax,
+                                'grandtotal'        => $request->grandtotal,
+                                'status'            => '1',
                             ]);
     
                             foreach($request->details as $key => $row){
@@ -143,12 +145,12 @@ class MitraMarketingOrderController extends Controller
                             
                             $response = [
                                 'status'    => 200,
-                                'message'   => 'Data berhasil disimpan'
+                                'message'   => 'Data berhasil disimpan',
                             ];
                         }else{
                             $response = [
                                 'status'    => 500,
-                                'message'   => 'Dokumen penghubung telah masuk ke dalam sistem. Silahkan cek status dokumen.',
+                                'message'   => 'Nomor dokumen penghubung telah masuk ke dalam sistem. Silahkan cek status dokumen.',
                             ];
                         }
                     }else{
@@ -168,6 +170,161 @@ class MitraMarketingOrderController extends Controller
                         'message'   => $message
                     ];
                 }
+            }
+        }else{
+            $response = [
+                'status'    => 401,
+                'message'   => 'Token tidak ditemukan'
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    public function getData(Request $request) {
+        $cek = User::where('api_token',$request->bearerToken())->first();
+        if($cek){
+            $query = MitraMarketingOrder::where('document_no',$request->document_no)->where('user_id',$cek->id)->first();
+            if($query){
+                $details = [];
+
+                foreach($query->mitraMarketingOrderDetail as $row){
+                    $details[] = [
+                        'item'          => $row->item->code.' - '.$row->item->name,
+                        'qty'           => round($row->qty,2),
+                        'price'         => round($row->price,2),
+                        'percent_tax'   => round($row->percent_tax,2),
+                        'final_price'   => round($row->final_price,2),
+                        'total'         => round($row->total,2),
+                        'tax'           => round($row->tax,2),
+                        'grandtotal'    => round($row->grandtotal,2),
+                        'note'          => $row->note,
+                    ];
+                }
+
+                $data = [
+                    'code'              => $query->code,
+                    'customer'          => $query->account->name,
+                    'type'              => $query->type(),
+                    'post_date'         => $query->post_date,
+                    'valid_date'        => $query->valid_date,
+                    'document_no'       => $query->document_no,
+                    'type_delivery'     => $query->deliveryType(),
+                    'delivery_date'     => $query->delivery_date,
+                    'delivery_schedule' => $query->deliverySchedule(),
+                    'payment_type'      => $query->paymentType(),
+                    'dp_type'           => $query->dpType(),
+                    'note'              => $query->note,
+                    'status'            => $query->statusRaw(),
+                    'total'             => round($query->total,2),
+                    'tax'               => round($query->tax,2),
+                    'grandtotal'        => round($query->grandtotal,2),
+                    'details'           => $details,
+                ];
+                $response = [
+                    'status'    => 200,
+                    'data'      => $data,
+                ];
+            }else{
+                $response = [
+                    'status'    => 401,
+                    'message'   => 'Data tidak ditemukan.'
+                ];
+            }
+        }else{
+            $response = [
+                'status'    => 401,
+                'message'   => 'Token tidak ditemukan'
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    public function getDataAll(Request $request) {
+        $cek = User::where('api_token',$request->bearerToken())->first();
+        if($cek){
+            $querydata = MitraMarketingOrder::where('user_id',$cek->id)->orderByDesc('code')->limit(25)->get();
+            if(count($querydata) > 0){
+                $data = [];
+                foreach($querydata as $query){
+                    $details = [];
+                    foreach($query->mitraMarketingOrderDetail as $row){
+                        $details[] = [
+                            'item'          => $row->item->code.' - '.$row->item->name,
+                            'qty'           => round($row->qty,2),
+                            'price'         => round($row->price,2),
+                            'percent_tax'   => round($row->percent_tax,2),
+                            'final_price'   => round($row->final_price,2),
+                            'total'         => round($row->total,2),
+                            'tax'           => round($row->tax,2),
+                            'grandtotal'    => round($row->grandtotal,2),
+                            'note'          => $row->note,
+                        ];
+                    }
+                    $data[] = [
+                        'code'              => $query->code,
+                        'customer'          => $query->account->name,
+                        'type'              => $query->type(),
+                        'post_date'         => $query->post_date,
+                        'valid_date'        => $query->valid_date,
+                        'document_no'       => $query->document_no,
+                        'type_delivery'     => $query->deliveryType(),
+                        'delivery_date'     => $query->delivery_date,
+                        'delivery_schedule' => $query->deliverySchedule(),
+                        'payment_type'      => $query->paymentType(),
+                        'dp_type'           => $query->dpType(),
+                        'note'              => $query->note,
+                        'status'            => $query->statusRaw(),
+                        'total'             => round($query->total,2),
+                        'tax'               => round($query->tax,2),
+                        'grandtotal'        => round($query->grandtotal,2),
+                        'details'           => $details,
+                    ];
+                }
+                
+                $response = [
+                    'status'    => 200,
+                    'data'      => $data,
+                ];
+            }else{
+                $response = [
+                    'status'    => 401,
+                    'message'   => 'Data tidak ditemukan.'
+                ];
+            }
+        }else{
+            $response = [
+                'status'    => 401,
+                'message'   => 'Token tidak ditemukan'
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    public function destroy(Request $request) {
+        $cek = User::where('api_token',$request->bearerToken())->first();
+        if($cek){
+            $query = MitraMarketingOrder::where('document_no',$request->document_no)->where('user_id',$cek->id)->whereIn('status',['1'])->first();
+            if($query){
+                if($query->delete()){
+                    $query->mitraMarketingOrderDetail()->delete();
+                    $response = [
+                        'status'    => 200,
+                        'message'   => 'Data berhasil dihapus.',
+                    ];
+                }else{
+                    $response = [
+                        'status'    => 401,
+                        'message'   => 'Data tidak ditemukan.'
+                    ];
+                }
+            }else{
+                $response = [
+                    'status'    => 401,
+                    'message'   => 'Data tidak ditemukan / status dokumen diluar perubahan.'
+                ];
             }
         }else{
             $response = [
