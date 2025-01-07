@@ -24,6 +24,7 @@ class MitraMarketingOrder extends Model
         'post_date',
         'valid_date',
         'document_no',
+        'branch_code',
         'type_delivery',
         'delivery_date',
         'delivery_schedule',
