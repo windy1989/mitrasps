@@ -115,6 +115,7 @@ class MitraMarketingOrderController extends Controller
                                 'post_date'         => $request->post_date,
                                 'valid_date'        => $request->valid_date,
                                 'document_no'       => $request->document_no,
+                                'branch_code'       => $request->branch_code,
                                 'type_delivery'     => $request->type_delivery,
                                 'delivery_date'     => $request->delivery_date,
                                 'delivery_schedule' => $request->delivery_schedule,
