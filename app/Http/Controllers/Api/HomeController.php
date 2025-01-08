@@ -21,6 +21,9 @@ class HomeController extends Controller
         $validator = Validator::make($request->all(), [ 
             'email' => 'required',
             'password' => 'required',
+        ], [
+            'email.required'       => 'Email pengguna tidak boleh kosong.',
+            'password.required'     => 'Password pengguna tidak boleh kosong.',
         ]);
 
         if ($validator->fails()) { 
