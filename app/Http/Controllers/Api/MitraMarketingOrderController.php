@@ -288,7 +288,7 @@ class MitraMarketingOrderController extends Controller
                 $response = [
                     'status'        => 200,
                     'total_data'    => count($querydata),
-                    'page'          => $page,
+                    'page'          => $request->page,
                     'data'          => $data,
                 ];
             }else{
