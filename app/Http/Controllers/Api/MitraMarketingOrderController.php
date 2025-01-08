@@ -21,38 +21,46 @@ class MitraMarketingOrderController extends Controller
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek){
             $validation = Validator::make($request->all(), [
-                'document_no'       => 'required',
-                'customer_code'     => 'required',
-                'branch_code'       => 'required',
-                'type'              => 'required',
-                'post_date'         => 'required',
-                'valid_date'        => 'required',
-                'type_delivery'     => 'required',
-                'delivery_date'     => 'required',
-                'delivery_schedule' => 'required',
-                'payment_type'      => 'required',
-                'dp_type'           => $request->payment_type == '1' ? 'required' : '',
-                'total'             => 'required',
-                'tax'               => 'required',
-                'grandtotal'        => 'required',
-                'details'           => 'required|array',
+                'document_no'            => 'required',
+                'customer_code'          => 'required',
+                'branch_code'            => 'required',
+                'type'                   => 'required',
+                'post_date'              => 'required',
+                'valid_date'             => 'required',
+                'type_delivery'          => 'required',
+                'delivery_date'          => 'required',
+                'delivery_schedule'      => 'required',
+                'delivery_address'       => 'required',
+                'delivery_province_code' => 'required',
+                'delivery_city_code'     => 'required',
+                'delivery_district_code' => 'required',
+                'payment_type'           => 'required',
+                'dp_type'                => $request->payment_type == '1' ? 'required' : '',
+                'total'                  => 'required',
+                'tax'                    => 'required',
+                'grandtotal'             => 'required',
+                'details'                => 'required|array',
             ], [
-                'document_no.required'       => 'Kode dokumen penghubung tidak boleh kosong.',
-                'customer_code.required'     => 'Kode Customer tidak boleh kosong.',
-                'branch_code.required'       => 'Kode Branch tidak boleh kosong.',
-                'type.required'              => 'Tipe SO tidak boleh kosong. 1 : proyek, 2 : retail, 3 : khusus, 4 : sample.',
-                'post_date.required'         => 'Tanggal post tidak boleh kosong.',
-                'valid_date.required'        => 'Tanggal valid SO tidak boleh kosong.',
-                'type_delivery.required'     => 'Tipe pengiriman tidak boleh kosong. 1 : loco, 2 : franco.',
-                'delivery_date.required'     => 'Tanggal permintaan pengiriman tidak boleh kosong.',
-                'delivery_schedule.required' => 'Status pengiriman tidak boleh kosong. 1 : Segera, 2 : Terjadwal, 3 : Belum Terjadwal.',
-                'payment_type.required'      => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
-                'dp_type.required'           => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
-                'total.required'             => 'Total tidak boleh kosong.',
-                'tax.required'               => 'Pajak tidak boleh kosong.',
-                'grandtotal.required'        => 'Grandtotal tidak boleh kosong.',
-                'details.required'           => 'Detail item tidak boleh kosong.',
-                'details.array'              => 'Detail harus dalam bentuk array.',
+                'document_no.required'            => 'Kode dokumen penghubung tidak boleh kosong.',
+                'customer_code.required'          => 'Kode Customer tidak boleh kosong.',
+                'branch_code.required'            => 'Kode Branch tidak boleh kosong.',
+                'type.required'                   => 'Tipe SO tidak boleh kosong. 1 : proyek, 2 : retail, 3 : khusus, 4 : sample.',
+                'post_date.required'              => 'Tanggal post tidak boleh kosong.',
+                'valid_date.required'             => 'Tanggal valid SO tidak boleh kosong.',
+                'type_delivery.required'          => 'Tipe pengiriman tidak boleh kosong. 1 : loco, 2 : franco.',
+                'delivery_date.required'          => 'Tanggal permintaan pengiriman tidak boleh kosong.',
+                'delivery_schedule.required'      => 'Status pengiriman tidak boleh kosong. 1 : Segera, 2 : Terjadwal, 3 : Belum Terjadwal.',
+                'delivery_address.required'       => 'Alamat pengiriman tidak boleh kosong.',
+                'delivery_province_code.required' => 'Provinsi pengiriman tidak boleh kosong.',
+                'delivery_city_code.required'     => 'Kota/Kabupaten pengiriman tidak boleh kosong.',
+                'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
+                'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
+                'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
+                'total.required'                  => 'Total tidak boleh kosong.',
+                'tax.required'                    => 'Pajak tidak boleh kosong.',
+                'grandtotal.required'             => 'Grandtotal tidak boleh kosong.',
+                'details.required'                => 'Detail item tidak boleh kosong.',
+                'details.array'                   => 'Detail harus dalam bentuk array.',
             ]);
 
             if($validation->fails()) {
@@ -108,24 +116,28 @@ class MitraMarketingOrderController extends Controller
 
                         if(!$querycheck){
                             $query = MitraMarketingOrder::create([
-                                'code'              => $newCode,
-                                'user_id'           => $cek->id,
-                                'account_id'        => $customer->id,
-                                'type'              => $request->type,
-                                'post_date'         => $request->post_date,
-                                'valid_date'        => $request->valid_date,
-                                'document_no'       => $request->document_no,
-                                'branch_code'       => $request->branch_code,
-                                'type_delivery'     => $request->type_delivery,
-                                'delivery_date'     => $request->delivery_date,
-                                'delivery_schedule' => $request->delivery_schedule,
-                                'payment_type'      => $request->payment_type,
-                                'dp_type'           => $request->dp_type ?? NULL,
-                                'note'              => $request->note,
-                                'total'             => $request->total,
-                                'tax'               => $request->tax,
-                                'grandtotal'        => $request->grandtotal,
-                                'status'            => '1',
+                                'code'                   => $newCode,
+                                'user_id'                => $cek->id,
+                                'account_id'             => $customer->id,
+                                'type'                   => $request->type,
+                                'post_date'              => $request->post_date,
+                                'valid_date'             => $request->valid_date,
+                                'document_no'            => $request->document_no,
+                                'branch_code'            => $request->branch_code,
+                                'type_delivery'          => $request->type_delivery,
+                                'delivery_date'          => $request->delivery_date,
+                                'delivery_schedule'      => $request->delivery_schedule,
+                                'delivery_address'       => $request->delivery_address,
+                                'delivery_province_code' => $request->delivery_province_code,
+                                'delivery_city_code'     => $request->delivery_city_code,
+                                'delivery_district_code' => $request->delivery_district_code,
+                                'payment_type'           => $request->payment_type,
+                                'dp_type'                => $request->dp_type ?? NULL,
+                                'note'                   => $request->note,
+                                'total'                  => $request->total,
+                                'tax'                    => $request->tax,
+                                'grandtotal'             => $request->grandtotal,
+                                'status'                 => '1',
                             ]);
     
                             foreach($request->details as $key => $row){
@@ -186,38 +198,46 @@ class MitraMarketingOrderController extends Controller
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek){
             $validation = Validator::make($request->all(), [
-                'document_no'       => 'required',
-                'customer_code'     => 'required',
-                'branch_code'       => 'required',
-                'type'              => 'required',
-                'post_date'         => 'required',
-                'valid_date'        => 'required',
-                'type_delivery'     => 'required',
-                'delivery_date'     => 'required',
-                'delivery_schedule' => 'required',
-                'payment_type'      => 'required',
-                'dp_type'           => $request->payment_type == '1' ? 'required' : '',
-                'total'             => 'required',
-                'tax'               => 'required',
-                'grandtotal'        => 'required',
-                'details'           => 'required|array',
+                'document_no'            => 'required',
+                'customer_code'          => 'required',
+                'branch_code'            => 'required',
+                'type'                   => 'required',
+                'post_date'              => 'required',
+                'valid_date'             => 'required',
+                'type_delivery'          => 'required',
+                'delivery_date'          => 'required',
+                'delivery_schedule'      => 'required',
+                'delivery_address'       => 'required',
+                'delivery_province_code' => 'required',
+                'delivery_city_code'     => 'required',
+                'delivery_district_code' => 'required',
+                'payment_type'           => 'required',
+                'dp_type'                => $request->payment_type == '1' ? 'required' : '',
+                'total'                  => 'required',
+                'tax'                    => 'required',
+                'grandtotal'             => 'required',
+                'details'                => 'required|array',
             ], [
-                'document_no.required'       => 'Kode dokumen penghubung tidak boleh kosong.',
-                'customer_code.required'     => 'Kode Customer tidak boleh kosong.',
-                'branch_code.required'       => 'Kode Branch tidak boleh kosong.',
-                'type.required'              => 'Tipe SO tidak boleh kosong. 1 : proyek, 2 : retail, 3 : khusus, 4 : sample.',
-                'post_date.required'         => 'Tanggal post tidak boleh kosong.',
-                'valid_date.required'        => 'Tanggal valid SO tidak boleh kosong.',
-                'type_delivery.required'     => 'Tipe pengiriman tidak boleh kosong. 1 : loco, 2 : franco.',
-                'delivery_date.required'     => 'Tanggal permintaan pengiriman tidak boleh kosong.',
-                'delivery_schedule.required' => 'Status pengiriman tidak boleh kosong. 1 : Segera, 2 : Terjadwal, 3 : Belum Terjadwal.',
-                'payment_type.required'      => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
-                'dp_type.required'           => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
-                'total.required'             => 'Total tidak boleh kosong.',
-                'tax.required'               => 'Pajak tidak boleh kosong.',
-                'grandtotal.required'        => 'Grandtotal tidak boleh kosong.',
-                'details.required'           => 'Detail item tidak boleh kosong.',
-                'details.array'              => 'Detail harus dalam bentuk array.',
+                'document_no.required'            => 'Kode dokumen penghubung tidak boleh kosong.',
+                'customer_code.required'          => 'Kode Customer tidak boleh kosong.',
+                'branch_code.required'            => 'Kode Branch tidak boleh kosong.',
+                'type.required'                   => 'Tipe SO tidak boleh kosong. 1 : proyek, 2 : retail, 3 : khusus, 4 : sample.',
+                'post_date.required'              => 'Tanggal post tidak boleh kosong.',
+                'valid_date.required'             => 'Tanggal valid SO tidak boleh kosong.',
+                'type_delivery.required'          => 'Tipe pengiriman tidak boleh kosong. 1 : loco, 2 : franco.',
+                'delivery_date.required'          => 'Tanggal permintaan pengiriman tidak boleh kosong.',
+                'delivery_schedule.required'      => 'Status pengiriman tidak boleh kosong. 1 : Segera, 2 : Terjadwal, 3 : Belum Terjadwal.',
+                'delivery_address.required'       => 'Alamat pengiriman tidak boleh kosong.',
+                'delivery_province_code.required' => 'Provinsi pengiriman tidak boleh kosong.',
+                'delivery_city_code.required'     => 'Kota/Kabupaten pengiriman tidak boleh kosong.',
+                'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
+                'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
+                'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
+                'total.required'                  => 'Total tidak boleh kosong.',
+                'tax.required'                    => 'Pajak tidak boleh kosong.',
+                'grandtotal.required'             => 'Grandtotal tidak boleh kosong.',
+                'details.required'                => 'Detail item tidak boleh kosong.',
+                'details.array'                   => 'Detail harus dalam bentuk array.',
             ]);
 
             if($validation->fails()) {
@@ -269,23 +289,27 @@ class MitraMarketingOrderController extends Controller
                         }
 
                         if(count($errorMessage) == 0){
-                            $query->user_id           = $cek->id;
-                            $query->account_id        = $customer->id;
-                            $query->type              = $request->type;
-                            $query->post_date         = $request->post_date;
-                            $query->valid_date        = $request->valid_date;
-                            $query->document_no       = $request->document_no;
-                            $query->branch_code       = $request->branch_code;
-                            $query->type_delivery     = $request->type_delivery;
-                            $query->delivery_date     = $request->delivery_date;
-                            $query->delivery_schedule = $request->delivery_schedule;
-                            $query->payment_type      = $request->payment_type;
-                            $query->dp_type           = $request->dp_type ?? NULL;
-                            $query->note              = $request->note;
-                            $query->total             = $request->total;
-                            $query->tax               = $request->tax;
-                            $query->grandtotal        = $request->grandtotal;
-                            $query->status            = '1';
+                            $query->user_id                = $cek->id;
+                            $query->account_id             = $customer->id;
+                            $query->type                   = $request->type;
+                            $query->post_date              = $request->post_date;
+                            $query->valid_date             = $request->valid_date;
+                            $query->document_no            = $request->document_no;
+                            $query->branch_code            = $request->branch_code;
+                            $query->type_delivery          = $request->type_delivery;
+                            $query->delivery_date          = $request->delivery_date;
+                            $query->delivery_schedule      = $request->delivery_schedule;
+                            $query->delivery_address       = $request->delivery_address;
+                            $query->delivery_province_code = $request->delivery_province_code;
+                            $query->delivery_city_code     = $request->delivery_city_code;
+                            $query->delivery_district_code = $request->delivery_district_code;
+                            $query->payment_type           = $request->payment_type;
+                            $query->dp_type                = $request->dp_type ?? NULL;
+                            $query->note                   = $request->note;
+                            $query->total                  = $request->total;
+                            $query->tax                    = $request->tax;
+                            $query->grandtotal             = $request->grandtotal;
+                            $query->status                 = '1';
                             $query->save();
     
                             $query->mitraMarketingOrderDetail()->delete();

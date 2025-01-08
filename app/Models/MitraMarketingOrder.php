@@ -28,6 +28,10 @@ class MitraMarketingOrder extends Model
         'type_delivery',
         'delivery_date',
         'delivery_schedule',
+        'delivery_address',
+        'delivery_province_code',
+        'delivery_city_code',
+        'delivery_district_code',
         'payment_type',
         'dp_type',
         'note',
@@ -67,6 +71,18 @@ class MitraMarketingOrder extends Model
 
     public function account(){
         return $this->belongsTo('App\Models\User','account_id','id')->withTrashed();
+    }
+
+    public function deliveryProvince(){
+        return $this->belongsTo('App\Models\Region','delivery_province_code','code')->withTrashed();
+    }
+
+    public function deliveryCity(){
+        return $this->belongsTo('App\Models\Region','delivery_city_code','code')->withTrashed();
+    }
+
+    public function deliveryDistrict(){
+        return $this->belongsTo('App\Models\Region','delivery_district_code','code')->withTrashed();
     }
 
     public function paymentType(){
