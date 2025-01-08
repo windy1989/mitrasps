@@ -37,7 +37,10 @@ class HomeController extends Controller
             $token = auth()->user()->createApiToken(); #Generate token
             return response()->json(['status' => 'Authorised', 'token' => $token ], 200);
         } else { 
-            return response()->json(['status'=>'Unauthorised'], 401);
+            return response()->json([
+                'status'    => 401,
+                'message'   => 'User tidak ditemukan.',
+            ]);
         }
     }
 }
