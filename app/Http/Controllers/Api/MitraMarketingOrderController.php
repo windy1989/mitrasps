@@ -246,7 +246,7 @@ class MitraMarketingOrderController extends Controller
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek){
             $page = $request->page ?? 0;
-            $querydata = MitraMarketingOrder::where('user_id',$cek->id)->orderByDesc('code')->offset(0)->limit(0)->get();
+            $querydata = MitraMarketingOrder::where('user_id',$cek->id)->orderByDesc('code')->offset($page)->limit(2)->get();
             if(count($querydata) > 0){
                 $data = [];
                 foreach($querydata as $query){
