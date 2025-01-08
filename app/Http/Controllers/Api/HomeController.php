@@ -27,7 +27,10 @@ class HomeController extends Controller
         ]);
 
         if ($validator->fails()) { 
-            return response()->json(['error'=>$validator->errors()], 401);
+            return response()->json([
+                'status' => 422,
+                'error'  => $validator->errors()
+            ]);
         }
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
