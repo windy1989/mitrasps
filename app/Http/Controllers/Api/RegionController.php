@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Region;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -35,38 +36,46 @@ class RegionController extends Controller
     }
 
     public function getAreaBulk(Request $request, $provinceCode='', $cityCode=''){
-        $offset = $request->query('offset', 0);
-        $limit  = $request->query('limit', 100); 
+        $cek_token_user = User::where('api_token',$request->bearerToken())->first();
 
-        $provinces = Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code","LIKE","{$provinceCode}%")->get();
-        
-        foreach($provinces as $row1){
-            $cities    = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code","LIKE","{$row1->code}%")->where("code","LIKE","{$cityCode}%")->get();
-            foreach($cities as $row2){
-                $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('code','LIKE',"{$row2->code}%")->get();
-                foreach($districts as $row3){
-                    $temp_data[] = [
-                        'province_code' => $row1->code,
-                        'province_name' => $row1->name,
-                        'city_code'     => $row2->code,
-                        'city_name'     => $row2->name,
-                        'district_code' => $row3->code,
-                        'district_name' => $row3->name,
-                    ];
+        if($cek_token_user){
+            $offset = $request->query('offset', 0);
+            $limit  = $request->query('limit', 100); 
+
+            $provinces = Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code","LIKE","{$provinceCode}%")->get();
+            
+            foreach($provinces as $row1){
+                $cities    = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code","LIKE","{$row1->code}%")->where("code","LIKE","{$cityCode}%")->get();
+                foreach($cities as $row2){
+                    $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('code','LIKE',"{$row2->code}%")->get();
+                    foreach($districts as $row3){
+                        $temp_data[] = [
+                            'province_code' => $row1->code,
+                            'province_name' => $row1->name,
+                            'city_code'     => $row2->code,
+                            'city_name'     => $row2->name,
+                            'district_code' => $row3->code,
+                            'district_name' => $row3->name,
+                        ];
+                    }
                 }
             }
+
+            //offset dan limit di sini karena saat foreach masih generate data lengkapnya
+            $data = array_slice($temp_data, $offset, $limit, true);
+            $response = [
+                'status'     => 200,
+                'message'    => 'success',
+                'total_data' => count($data),
+                'data'       => $data,
+            ];
+        }else{
+            $response = [
+                'status'    => 401,
+                'message'   => 'Token tidak ditemukan'
+            ];
         }
-
-        //offset dan limit di sini karena saat foreach masih generate data lengkapnya
-        $data = array_slice($temp_data, $offset, $limit, true);
-        $response = [
-            'status'     => 200,
-            'message'    => 'success',
-            'total_data' => count($data),
-            'data'       => $data,
-        ];
-
-        return response()->json($response, 200);
+        return response()->json($response);
     }
     
     public function getAllProvinces(){
