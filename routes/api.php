@@ -12,7 +12,7 @@ Route::prefix('mitra_marketing_order')->group(function () {
     Route::post('/create', [MitraMarketingOrderController::class, 'create']);
     Route::put('/update', [MitraMarketingOrderController::class, 'update']);
     Route::get('/get_data', [MitraMarketingOrderController::class, 'getData']);
-    Route::get('/get_data_all', [MitraMarketingOrderController::class, 'getDataAll']);
+    Route::post('/get_data_all', [MitraMarketingOrderController::class, 'getDataAll']);
     Route::post('/destroy', [MitraMarketingOrderController::class, 'destroy']);
 });
 Route::prefix('item_stock')->group(function () {
