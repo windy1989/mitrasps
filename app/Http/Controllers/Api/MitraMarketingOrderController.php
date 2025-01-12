@@ -58,7 +58,7 @@ class MitraMarketingOrderController extends Controller
                 'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
                 'total.required'                  => 'Total tidak boleh kosong.',
                 'tax.required'                    => 'Pajak utama tidak boleh kosong.',
-                'tax.integer'                     => 'Pajak utama tidak boleh ada angka dibelakang koma (desimal).',
+                'tax.integer'                     => 'Pajak utama tidak boleh ada angka dibelakang koma (desimal). Disarankan memakai round-down dari nilai penambahan pajak per detail item.',
                 'tax.min'                         => 'Pajak utama tidak boleh dibawah 0.',
                 'grandtotal.required'             => 'Grandtotal tidak boleh kosong.',
                 'details.required'                => 'Detail item tidak boleh kosong.',
