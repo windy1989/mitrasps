@@ -44,4 +44,3 @@ Route::prefix('district')->group(function (){
     Route::get('/show/{code}', [RegionController::class, 'getDistrict']);
 });
 */
-});
