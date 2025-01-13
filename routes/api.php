@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MitraMarketingOrderController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\TrackingController;
+use App\Http\Controllers\Api\MitraCustomerController;
 use App\Http\Controllers\Api\RegionController;
 
 Route::post('login',[HomeController::class, 'login']);
@@ -44,3 +45,11 @@ Route::prefix('district')->group(function (){
     Route::get('/show/{code}', [RegionController::class, 'getDistrict']);
 });
 */
+
+Route::prefix('customer')->group(function (){
+    Route::get('/all', [MitraCustomerController::class, 'getAllData']);
+    Route::get('/show/{code?}', [MitraCustomerController::class, 'getData']);
+    Route::post('/store', [MitraCustomerController::class, 'create']);
+    Route::put('/update/{code?}', [MitraCustomerController::class, 'update']);
+    Route::delete('/delete/{code?}', [MitraCustomerController::class, 'destroy']);
+});
