@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 
 
 class HomeController extends Controller
@@ -34,9 +33,7 @@ class HomeController extends Controller
             ]);
         }
 
-        /* if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ */
-        $check = User::where('email',$request->email)->where('status','1')->first();
-        if($check && Hash::check($request->password, $check->password)){
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $token = auth()->user()->createApiToken(); #Generate token
             return response()->json(['status' => 200, 'token' => $token ], 200);
         } else { 
