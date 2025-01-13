@@ -114,7 +114,7 @@ class MitraMarketingOrderController extends Controller
                     }
 
                     if(count($errorMessage) == 0){
-                        $querycheck = MitraMarketingOrder::where('document_no',$request->document_no)->whereIn('status',['1','2','3'])->first();
+                        $querycheck = MitraMarketingOrder::where('user_id',$cek->id)->where('document_no',$request->document_no)->whereIn('status',['1','2','3'])->first();
 
                         if(!$querycheck){
                             $query = MitraMarketingOrder::create([
