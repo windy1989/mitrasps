@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Helpers;
-
-class ApiResponseHelper{
+if(!function_exists('apiResponse')){
     /*
         200 OK - Request succeeded.
         201 Created - Resource successfully created.
@@ -22,7 +20,7 @@ class ApiResponseHelper{
      *  @return \Illuminate\Http\JsonResponse
      */
     
-    public static function apiResponse($success, $status=200, $message, $data=null, $meta=[]){
+    function apiResponse($success, $status=200, $message, $data=null, $meta=[]){
         return response()->json([
             'success' => $success,
             'status'  => $status,
@@ -32,7 +30,5 @@ class ApiResponseHelper{
         ], $status);
     }
 }
-
-
 
 ?>
