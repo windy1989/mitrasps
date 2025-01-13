@@ -29,12 +29,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Ganti Response Macro dengan Helper
         /*
-        Response::macro('api', function($success, $status=200, $message, $data=null, $meta=[],){
+        Response::macro('api', function($success, $status=200, $message, $data=null, $meta=[]){
             return response()->json([
                 'success' => $success,
                 'status'  => $status,
                 'message' => $message,
-                'data'    => $data, // can contain error ressponse
+                'data'    => $data, // can contain error response
                 'meta'    => array_merge($meta),
             ], $status);
         });
