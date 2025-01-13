@@ -31,25 +31,26 @@ Route::get('/all_area/{provinceCode?}/{cityCode?}', [RegionController::class, 'g
 
 /*
 Route::prefix('province')->group(function (){
-    Route::get('/all', [RegionController::class, 'getAllProvinces']);
-    Route::get('/show/{code}', [RegionController::class, 'getProvince']);
+    Route::get('/', [RegionController::class, 'getAllProvinces']);
+    Route::get('/{code}', [RegionController::class, 'getProvince']);
 });
 Route::prefix('city')->group(function (){
-    Route::get('/all', [RegionController::class, 'getAllCities']);
-    Route::get('/filter/{provinceCode}', [RegionController::class, 'getCityByProvince']);
-    Route::get('/show/{code}', [RegionController::class, 'getCity']);
+    Route::get('/', [RegionController::class, 'getAllCities']);
+    Route::get('/filterProvince/{provinceCode}', [RegionController::class, 'getCityByProvince']);
+    Route::get('/{code}', [RegionController::class, 'getCity']);
 });
 Route::prefix('district')->group(function (){
-    Route::get('/all', [RegionController::class, 'getAllDistricts']);
-    Route::get('/filter/{cityCode}', [RegionController::class, 'getDistrictByCity']);
-    Route::get('/show/{code}', [RegionController::class, 'getDistrict']);
+    Route::get('/', [RegionController::class, 'getAllDistricts']);
+    Route::get('/filterCity/{cityCode}', [RegionController::class, 'getDistrictByCity']);
+    Route::get('/{code}', [RegionController::class, 'getDistrict']);
 });
 */
 
 Route::prefix('customer')->group(function (){
-    Route::get('/all', [MitraCustomerController::class, 'getAllData']);
-    Route::get('/show/{code?}', [MitraCustomerController::class, 'getData']);
-    Route::post('/store', [MitraCustomerController::class, 'create']);
-    Route::put('/update/{code?}', [MitraCustomerController::class, 'update']);
-    Route::delete('/delete/{code?}', [MitraCustomerController::class, 'destroy']);
+    Route::get('/', [MitraCustomerController::class, 'getAllData']);
+    Route::get('/{code}', [MitraCustomerController::class, 'getData']);
+    Route::post('/', [MitraCustomerController::class, 'create']);
+    Route::put('/{code}', [MitraCustomerController::class, 'update']);
+    // Route::put('/{code}/restore', [MitraCustomerController::class, 'restore']);
+    Route::delete('/{code}', [MitraCustomerController::class, 'delete']);
 });
