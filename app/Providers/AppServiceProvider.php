@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Facades\Response;
+//use Illuminate\Support\Facades\Response;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +27,8 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
 
-
+        // Ganti Response Macro dengan Helper
+        /*
         Response::macro('api', function($success, $status=200, $message, $data=null, $meta=[],){
             return response()->json([
                 'success' => $success,
@@ -37,5 +38,6 @@ class AppServiceProvider extends ServiceProvider
                 'meta'    => array_merge($meta),
             ], $status);
         });
+        */
     }
 }
