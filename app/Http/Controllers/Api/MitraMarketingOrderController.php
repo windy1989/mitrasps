@@ -19,7 +19,7 @@ class MitraMarketingOrderController extends Controller
 {
     public function create(Request $request) {
         $cek = User::where('api_token',$request->bearerToken())->first();
-        if($cek){
+        if($cek && $request->bearerToken()){
             $validation = Validator::make($request->all(), [
                 'document_no'            => 'required',
                 'customer_code'          => 'required',
@@ -198,7 +198,7 @@ class MitraMarketingOrderController extends Controller
 
     public function update(Request $request) {
         $cek = User::where('api_token',$request->bearerToken())->first();
-        if($cek){
+        if($cek && $request->bearerToken()){
             $validation = Validator::make($request->all(), [
                 'document_no'            => 'required',
                 'customer_code'          => 'required',
@@ -372,7 +372,7 @@ class MitraMarketingOrderController extends Controller
 
     public function getData(Request $request) {
         $cek = User::where('api_token',$request->bearerToken())->first();
-        if($cek){
+        if($cek && $request->bearerToken()){
             $query = MitraMarketingOrder::where('document_no',$request->document_no)->where('user_id',$cek->id)->first();
             if($query){
                 $details = [];
@@ -436,7 +436,7 @@ class MitraMarketingOrderController extends Controller
 
     public function getDataAll(Request $request) {
         $cek = User::where('api_token',$request->bearerToken())->first();
-        if($cek){
+        if($cek && $request->bearerToken()){
             $page = $request->page ? $request->page * 25 : 0;
             $querydata = MitraMarketingOrder::where('user_id',$cek->id)->orderByDesc('code')->offset($page)->limit(25)->get();
             if(count($querydata) > 0){
@@ -505,7 +505,7 @@ class MitraMarketingOrderController extends Controller
 
     public function destroy(Request $request) {
         $cek = User::where('api_token',$request->bearerToken())->first();
-        if($cek){
+        if($cek && $request->bearerToken()){
             $query = MitraMarketingOrder::where('document_no',$request->document_no)->where('user_id',$cek->id)->whereIn('status',['1'])->first();
             if($query){
                 if($query->delete()){

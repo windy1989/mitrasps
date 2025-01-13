@@ -39,6 +39,7 @@ class RegionController extends Controller
         $cek_token_user = User::where('api_token',$request->bearerToken())->first();
 
         if($cek_token_user){
+        if($cek_token_user && $request->bearerToken()){
             $offset = $request->query('offset', 0);
             $limit  = $request->query('limit', 100); 
 
