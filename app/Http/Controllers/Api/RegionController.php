@@ -62,12 +62,8 @@ class RegionController extends Controller
 
             //offset dan limit di sini karena saat foreach masih generate data lengkapnya
             $data = array_slice($temp_data, $offset, $limit, true);
-            $response = [
-                'status'     => 200,
-                'message'    => 'success',
-                'total_data' => count($data),
-                'data'       => $data,
-            ];
+            
+            return response()->api(true, 200, 'Data ketemu', $data, ['total_data' => count($data)]);
         }else{
             $response = [
                 'status'    => 401,
