@@ -36,6 +36,7 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code' => 'required',
                 'payment_type'           => 'required',
                 'dp_type'                => $request->payment_type == '1' ? 'required' : '',
+                'percent_dp'             => $request->payment_type == '1' ? 'required' : '',
                 'total'                  => 'required',
                 'tax'                    => 'required|integer|min:0',
                 'grandtotal'             => 'required',
@@ -56,6 +57,7 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
                 'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
                 'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
+                'percent_dp.required'             => 'Prosentase DP tidak boleh kosong.',
                 'total.required'                  => 'Total tidak boleh kosong.',
                 'tax.required'                    => 'Pajak utama tidak boleh kosong.',
                 'tax.integer'                     => 'Pajak utama tidak boleh ada angka dibelakang koma (desimal). Disarankan memakai round-down dari nilai penambahan pajak per detail item.',
@@ -135,6 +137,7 @@ class MitraMarketingOrderController extends Controller
                                 'delivery_district_code' => $request->delivery_district_code,
                                 'payment_type'           => $request->payment_type,
                                 'dp_type'                => $request->dp_type ?? NULL,
+                                'percent'                => $request->percent_dp ?? NULL,
                                 'note'                   => $request->note,
                                 'total'                  => $request->total,
                                 'tax'                    => $request->tax,
@@ -215,6 +218,7 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code' => 'required',
                 'payment_type'           => 'required',
                 'dp_type'                => $request->payment_type == '1' ? 'required' : '',
+                'percent_dp'             => $request->payment_type == '1' ? 'required' : '',
                 'total'                  => 'required',
                 'tax'                    => 'required',
                 'grandtotal'             => 'required',
@@ -235,6 +239,7 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
                 'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
                 'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
+                'percent_dp.required'             => 'Prosentase DP tidak boleh kosong.',
                 'total.required'                  => 'Total tidak boleh kosong.',
                 'tax.required'                    => 'Pajak tidak boleh kosong.',
                 'grandtotal.required'             => 'Grandtotal tidak boleh kosong.',
@@ -307,6 +312,7 @@ class MitraMarketingOrderController extends Controller
                             $query->delivery_district_code = $request->delivery_district_code;
                             $query->payment_type           = $request->payment_type;
                             $query->dp_type                = $request->dp_type ?? NULL;
+                            $query->percent                = $request->percent_dp ?? NULL;
                             $query->note                   = $request->note;
                             $query->total                  = $request->total;
                             $query->tax                    = $request->tax;

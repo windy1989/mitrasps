@@ -34,6 +34,7 @@ class MitraMarketingOrder extends Model
         'delivery_district_code',
         'payment_type',
         'dp_type',
+        'percent_dp',
         'note',
         'total',
         'tax',
