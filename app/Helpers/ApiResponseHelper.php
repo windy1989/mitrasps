@@ -16,17 +16,19 @@ if(!function_exists('apiResponse')){
      *  @param int|null $status
      *  @param string $message
      *  @param mixed|null $data
-     *  @param mixed $meta
+     *  @param mixed $meta (must be array)
      *  @return \Illuminate\Http\JsonResponse
      */
     
-    function apiResponse($success, $status=200, $message, $data=null, $meta=[]){
+    function apiResponse($success, $status, $message, $data=null, $meta=[]){
+        $status = $status ?? ($success ? 200 : 400);
+
         return response()->json([
             'success' => $success,
             'status'  => $status,
             'message' => $message,
-            'data'    => $data, // can contain error ressponse
-            'meta'    => array_merge($meta),
+            'data'    => $data,                 // error response if validation error
+            'meta'    => array_merge($meta),    // pagination, current_page, per_page, total_pages, total data 
         ], $status);
     }
 }
