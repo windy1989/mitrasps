@@ -80,9 +80,11 @@ class MitraMarketingOrderController extends Controller
                     $newCode = MitraMarketingOrder::generateCode($menu->document_code.date('y',strtotime($request->post_date)).'00');
                     
                     $errorMessage = [];
-                    $customer = User::where('employee_no',$request->customer_code)->where('status','1')->where('type','2')->first();
+                    $customer = User::whereHas('mitraCustomer',function($query)use($request){
+                        $query->where('code',$request->customer_code);
+                    })->where('status','1')->where('type','2')->first();
                     if(!$customer){
-                        $errorMessage[] = 'Customer tidak ditemukan.';
+                        $errorMessage[] = 'Customer tidak ditemukan atau belum diapprove oleh marketing.';
                     }
 
                     if(!in_array($request->type,['1','2','3','4'])){

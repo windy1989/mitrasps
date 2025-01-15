@@ -845,4 +845,8 @@ class User extends Authenticatable
 
         return $status;
     }
+
+    public function mitraCustomer(){
+        return $this->hasOne('App\Models\MitraCustomer','user_id','id');
+    }
 }
