@@ -106,6 +106,7 @@ class RegionController extends Controller
     public function getProvince(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
+            //path param
             $code = base64_decode($code);
 
             $province = Region::whereRaw("CHAR_LENGTH(code) = 2")->where('code', $code)->first();
@@ -149,6 +150,7 @@ class RegionController extends Controller
     public function getCityByProvince(Request $request, $parentCode){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
+            //path param
             $parentCode = base64_decode($parentCode);
 
             if(strlen($parentCode) != 2){
@@ -177,6 +179,7 @@ class RegionController extends Controller
     public function getCity(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
+            //path param
             $code = base64_decode($code);
             
             $city = Region::whereRaw("CHAR_LENGTH(code) = 5")->where('code', $code)->first();
@@ -221,6 +224,7 @@ class RegionController extends Controller
     public function getDistrictByCity(Request $request, $parentCode){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
+            //path param
             $parentCode = base64_decode($parentCode);
 
             if(strlen($parentCode) != 5){
@@ -249,6 +253,7 @@ class RegionController extends Controller
     public function getDistrict(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
+            //path param
             $code = base64_decode($code);
             
             $district = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('code', $code)->first();

@@ -47,7 +47,7 @@ Route::prefix('district')->group(function (){
 */
 
 Route::prefix('customer')->group(function (){
-    Route::get('/', [MitraCustomerController::class, 'getAllData']);
+    Route::get('/', [MitraCustomerController::class, 'getDataAll']);
     Route::get('/{code}', [MitraCustomerController::class, 'getData']);
     Route::post('/', [MitraCustomerController::class, 'create']);
     Route::put('/{code}', [MitraCustomerController::class, 'update']);

@@ -17,7 +17,7 @@ class MitraCustomer extends Model{
         'code',             // code customer dari mitra
         'name',             // nama customer dari mitra
         'type',
-        'branch',           // keterangan cabang mitra
+        'branch_code',      // keterangan cabang mitra
         'phone',
         'email',
         'address',
@@ -27,9 +27,8 @@ class MitraCustomer extends Model{
         'id_card',
         'pic_name',
         'pic_address',
-        'credit_limit',
+        'limit_credit',
         'top',
-        'npwp',
         'status_approval',  // approved & accepted / rejected
         'user_id',          // link ID BP di table user (employee_no)
         'mitra_id',         // ID Broker (employee_no) dari table user
