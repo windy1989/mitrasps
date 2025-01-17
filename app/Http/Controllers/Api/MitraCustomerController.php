@@ -204,6 +204,12 @@ class MitraCustomerController extends Controller
                         return apiResponse(false, 422, "Customer sudah ada.", null, []);
                     }
 
+                    //Area JABODETABEKSER 56 hari -> internal 66.
+                    //Area lain seluruh Jawa 42 hari -> internal 48 hari.
+                    $top_internal = $request->top;
+                    if($request->top == 56){ $top_internal = 66; }
+                    if($request->top == 42){ $top_internal = 48; }
+
                     $query = MitraCustomer::create([
                         'code'            => $request->code,
                         'name'            => $request->name,
@@ -220,6 +226,7 @@ class MitraCustomerController extends Controller
                         'pic_address'     => $request->pic_address,
                         'limit_credit'    => $request->limit_credit,
                         'top'             => $request->top,
+                        'top_internal'    => $top_internal,
                         'status_approval' => 0,
                         'mitra_id'        => $cek->id,
                         'status'          => 0,
