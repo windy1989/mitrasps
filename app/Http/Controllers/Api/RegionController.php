@@ -81,6 +81,7 @@ class RegionController extends Controller
         }
     }
     
+    //get all provinces
     public function getAllProvinces(Request $request){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -103,6 +104,7 @@ class RegionController extends Controller
         }
     }
 
+    //get single province
     public function getProvince(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -111,7 +113,7 @@ class RegionController extends Controller
 
             $province = Region::whereRaw("CHAR_LENGTH(code) = 2")->where('code', $code)->first();
             if($province){
-                $data[] = [
+                $data = [
                     'code' => $province->code,
                     'name' => $province->name,
                 ];
@@ -126,6 +128,7 @@ class RegionController extends Controller
         }
     }
 
+    //get all cities
     public function getAllCities(Request $request){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -147,6 +150,7 @@ class RegionController extends Controller
         }
     }
 
+    //get all city filtered by province
     public function getCityByProvince(Request $request, $parentCode){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -176,6 +180,7 @@ class RegionController extends Controller
         }
     }
 
+    //get single city
     public function getCity(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -184,7 +189,7 @@ class RegionController extends Controller
             
             $city = Region::whereRaw("CHAR_LENGTH(code) = 5")->where('code', $code)->first();
             if($city){
-                $data[] = [
+                $data = [
                     'code' => $city->code,
                     'name' => $city->name,
                 ];
@@ -199,6 +204,7 @@ class RegionController extends Controller
         }
     }
 
+    //get all district
     public function getAllDistricts(Request $request){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -221,6 +227,7 @@ class RegionController extends Controller
         }
     }
 
+    //get all district filtered by city
     public function getDistrictByCity(Request $request, $parentCode){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -250,6 +257,7 @@ class RegionController extends Controller
         }
     }
     
+    //get single district
     public function getDistrict(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
@@ -258,7 +266,7 @@ class RegionController extends Controller
             
             $district = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('code', $code)->first();
             if($district){
-                $data[] = [
+                $data = [
                     'code' => $district->code,
                     'name' => $district->name,
                 ];
