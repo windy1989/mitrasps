@@ -29,6 +29,7 @@ class MitraCustomer extends Model{
         'pic_address',
         'limit_credit',
         'top',
+        'top_internal',
         'status_approval',  // approved & accepted / rejected
         'user_id',          // link ID BP di table user (employee_no)
         'mitra_id',         // ID Broker (employee_no) dari table user
