@@ -164,7 +164,7 @@ class MitraCustomerController extends Controller
                 'pic_name'         => 'required',
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
-                'top'              => 'required',
+                // 'top'              => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -183,7 +183,7 @@ class MitraCustomerController extends Controller
                 'pic_name.required'         => 'Nama PIC tidak boleh kosong.',
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
-                'top.required'              => 'TOP tidak boleh kosong.',
+                // 'top.required'              => 'TOP tidak boleh kosong.',
                 'npwp.required'             => 'NPWP tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
@@ -206,9 +206,9 @@ class MitraCustomerController extends Controller
 
                     //Area JABODETABEKSER 56 hari -> internal 66.
                     //Area lain seluruh Jawa 42 hari -> internal 48 hari.
-                    $top_internal = $request->top;
-                    if($request->top == 56){ $top_internal = 66; }
-                    if($request->top == 42){ $top_internal = 48; }
+                    // $top_internal = $request->top;
+                    // if($request->top == 56){ $top_internal = 66; }
+                    // if($request->top == 42){ $top_internal = 48; }
 
                     $query = MitraCustomer::create([
                         'code'            => $request->code,
@@ -225,8 +225,8 @@ class MitraCustomerController extends Controller
                         'pic_name'        => $request->pic_name,
                         'pic_address'     => $request->pic_address,
                         'limit_credit'    => $request->limit_credit,
-                        'top'             => $request->top,
-                        'top_internal'    => $top_internal,
+                        'top'             => 90, //$request->top,
+                        'top_internal'    => 90, //$top_internal,
                         'status_approval' => 0,
                         'mitra_id'        => $cek->id,
                         'status'          => 0,
@@ -299,7 +299,7 @@ class MitraCustomerController extends Controller
                 'pic_name'         => 'required',
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
-                'top'              => 'required',
+                // 'top'              => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -318,7 +318,7 @@ class MitraCustomerController extends Controller
                 'pic_name.required'         => 'Nama PIC tidak boleh kosong.',
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
-                'top.required'              => 'TOP tidak boleh kosong.',
+                // 'top.required'              => 'TOP tidak boleh kosong.',
                 'npwp.required'             => 'NPWP tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
@@ -335,6 +335,12 @@ class MitraCustomerController extends Controller
                         //kalau kode sudah ada tapi didelete, restore
                         //kalau kode sudah ada, update data
                         
+                        //Area JABODETABEKSER 56 hari -> internal 66.
+                        //Area lain seluruh Jawa 42 hari -> internal 48 hari.
+                        // $top_internal = $request->top;
+                        // if($request->top == 56){ $top_internal = 66; }
+                        // if($request->top == 42){ $top_internal = 48; }
+
                         $customer->code            = $request->code;
                         $customer->name            = $request->name;
                         $customer->type            = $request->type;
@@ -349,11 +355,8 @@ class MitraCustomerController extends Controller
                         $customer->pic_name        = $request->pic_name;
                         $customer->pic_address     = $request->pic_address;
                         $customer->limit_credit    = $request->limit_credit;
-                        $customer->top             = $request->top;
-                        $customer->top_internal    = $request->top;
-                        $customer->status_approval = 0;
-                        $customer->mitra_id        = $cek->id;
-                        $customer->status          = 0;
+                        // $customer->top             = $request->top;
+                        // $customer->top_internal    = $top_internal;
                         $customer->save();
                         
                         return apiResponse(false, 422, "Data Customer berhassil diupdate.", null, []);
