@@ -421,7 +421,7 @@ class MitraCustomerController extends Controller
                         DB::commit();
                         return apiResponse(true, 200, "Data customer berhasil diupdate.", null, []);
                     }else{
-                        return apiResponse(false, 422, "Data customer tidak ditemukan.", null, []);
+                        return apiResponse(false, 422, "Data customer tidak berhasil diupdate.", null, []);
                     }
                 }
                 catch(\Exception $e){
