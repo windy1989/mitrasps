@@ -100,21 +100,12 @@ class StockController extends Controller
                 }
 
 
-                $response = [
-                    'status'    => 200,
-                    'data'      => $data,
-                ];
+                return apiResponse(true, 200, 'Data Ditemukan', $data, []);
             } else {
-                $response = [
-                    'status'    => 401,
-                    'message'   => 'Data tidak ditemukan.'
-                ];
+                return apiResponse(true, 200, 'Data tidak ditemukan', '', []);
             }
         } else {
-            $response = [
-                'status'    => 401,
-                'message'   => 'Token tidak ditemukan'
-            ];
+            return apiResponse(false, 401, 'Token tidak valid', null, []);
         }
 
         return response()->json($response);
@@ -123,7 +114,7 @@ class StockController extends Controller
     public function getData(Request $request)
     {
         $cek = User::where('api_token', $request->bearerToken())->first();
-        
+
         if ($cek) {
             $brand_id = $cek->brand_id;
             $code = $request->code;

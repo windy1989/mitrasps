@@ -18,103 +18,135 @@ class TrackingController extends Controller
     public function getData(Request $request)
     {
         $cek = User::where('api_token', $request->bearerToken())->first();
-        $brand_id = $cek->brand_id;
+
+
         if ($cek) {
+            $tracking = [];
 
-            $query = DB::select("
-            SELECT a.kode,a.name,a.shading, a.initial as stock FROM (
-        SELECT kode,a.name,a.shading, SUM(qty) AS initial FROM (
+            $mitramocode = $request->code;
 
-        SELECT  d.code AS kode,d.name,k.code AS shading, coalesce(SUM(b.qty*c.conversion),0) AS Qty
-            FROM production_handovers a
-            LEFT JOIN production_handover_details b ON a.id=b.production_handover_id
-            LEFT JOIN production_fg_receive_details c ON c.id=b.production_fg_receive_detail_id and c.deleted_at IS null
-            LEFT JOIN items d ON d.id=b.item_id
-            LEFT JOIN item_shadings k ON k.id=b.item_shading_id
-        WHERE d.brand_id =".$brand_id." and a.void_date IS NULL AND a.deleted_at IS NULL AND d.item_group_id=7 
-        GROUP BY d.code,d.name,k.code
-        UNION ALL
-        SELECT d.code AS kode,d.name,k.code, coalesce(SUM(b.qty),0)*-1 AS RepackOut
-            FROM production_repacks a
-        LEFT JOIN production_repack_details b ON a.id=b.production_repack_id and b.deleted_at is null
-        LEFT JOIN item_units c ON c.id=item_unit_source_id
-        LEFT JOIN items d ON d.id=b.item_source_id
-            LEFT JOIN item_shadings k ON k.id=b.item_shading_id
-            WHERE d.brand_id =".$brand_id." and a.void_date IS NULL AND a.deleted_at IS NULL AND d.item_group_id AND d.item_group_id=7  
-        GROUP BY d.code,d.name,k.code
-        UNION ALL
-        SELECT d.code AS kode,d.name,k.code, coalesce(SUM(b.qty),0) AS RepackIn
-            FROM production_repacks a
-        LEFT JOIN production_repack_details b ON a.id=b.production_repack_id and b.deleted_at is null
-        LEFT JOIN item_units c ON c.id=item_unit_target_id
-        LEFT JOIN items d ON d.id=b.item_target_id
-        LEFT JOIN item_shadings k ON k.id=b.item_shading_id
-            WHERE d.brand_id =".$brand_id." and a.void_date IS NULL AND a.deleted_at IS NULL AND d.item_group_id=7  
-        GROUP BY d.code,d.name,k.code
-        UNION ALL
-        SELECT d.code AS kode,d.name,k.code, coalesce(SUM(b.qty),0) AS GR
-        FROM good_receives a
-        LEFT JOIN good_receive_details b ON a.id=b.good_receive_id and b.deleted_at is null
-        LEFT JOIN items d ON d.id=b.item_id
-        LEFT JOIN item_shadings k ON k.id=b.item_shading_id
-            WHERE d.brand_id =".$brand_id." and a.void_date IS NULL AND a.deleted_at IS NULL AND d.item_group_id=7  
-        GROUP BY d.code,d.name,k.code
-        UNION ALL
-        SELECT d.`code` AS kode,d.name,k.code, coalesce(SUM(b.qty),0)*-1 AS GI
-        FROM good_issues a
-        LEFT JOIN good_issue_details b ON a.id=b.good_issue_id and b.deleted_at is null
-        LEFT JOIN item_stocks c ON c.id=b.item_stock_id
-        LEFT JOIN items d ON d.id=c.item_id
-        LEFT JOIN item_shadings k ON k.id=b.item_shading_id
-            WHERE d.brand_id =".$brand_id." and a.void_date IS NULL AND a.deleted_at IS NULL AND d.item_group_id=7 
-        GROUP BY d.code,d.name,k.code
-        UNION ALL
-        SELECT c.code AS kode,c.name,k.code, coalesce(SUM(b.qty*f.qty_conversion),0)*-1 AS qtySJ
-            FROM marketing_order_delivery_processes a
-            LEFT JOIN marketing_order_delivery_process_details b ON a.id=b.marketing_order_delivery_process_id
-            LEFT JOIN marketing_order_delivery_details e ON e.id=b.marketing_order_delivery_detail_id and e.deleted_at is null
-            LEFT JOIN marketing_order_details f ON f.id=e.marketing_order_detail_id and f.deleted_at is null
-            LEFT JOIN item_stocks l ON l.id=b.item_stock_id
-            LEFT JOIN items c ON c.id=e.item_id
-        LEFT JOIN item_shadings k ON k.id=l.item_shading_id
-            WHERE c.brand_id =".$brand_id." and a.void_date is null AND a.deleted_at is NULL AND c.item_group_id=7  
-        GROUP BY c.code,c.name,k.code)a GROUP BY kode,NAME,shading)a
+            $mitramarketingorder = '';
+            $mitrasalesorder = '';
+            $mitramod = '';
+            $mitrasj = '';
 
+            //mitra praso
+            $querymitramarketingorder = DB::select("
+            select distinct created_at from mitra_marketing_orders 
+            where code='" . $mitramocode . "' and void_date is null and deleted_at is null
         ");
 
+            if ($querymitramarketingorder) {
+                foreach ($querymitramarketingorder as $row) {
+                    $tracking[] = [
+                        'name' => 'Mitra Marketing Order',
+                        'code' =>  $mitramocode,
+                        'date' => $row->created_at
+                    ];
+                }
+            }
 
-            if ($query) {
-                $data = [];
+           
 
-                foreach ($query as $row) {
+            //mitra so
+            $querymitraso = DB::select("
+            select distinct a.code, a.created_at from marketing_orders a 
+            left join mitra_marketing_orders b on a.document_no=b.code and b.deleted_at is null 
+            where b.code='" . $mitramocode . "' and a.void_date is null and a.deleted_at is null
+        ");
+
+            if ($querymitraso) {
+                foreach ($querymitraso as $row) {
+                    $tracking[] = [
+                        'name' => 'Sales Order',
+                        'code' => $querymitraso['code'],
+                        'date' => $querymitraso['created_at']
+                    ];
+                }
+            }
+            //mitra mod
+            $querymitramod = DB::select("
+            select distinct a.code,a.created_at from marketing_order_deliveries a 
+            left join marketing_order_delivery_details b on a.id=b.marketing_order_delivery_id and b.deleted_at is null
+            left join marketing_order_details c on c.id=b.marketing_order_detail_id and c.deleted_at is null
+            left join marketing_orders d on d.id=c.marketing_order_id and d.deleted_at is null and d.void_date is null
+            where d.document_no='" . $mitramocode . "' and a.void_date is null and a.deleted_at is null
+        ");
+
+            if ($querymitramod) {
+                foreach ($querymitramod as $row) {
+                    $tracking[] = [
+                        'name' => 'MOD',
+                        'code' => $querymitramod['code'],
+                        'date' => $querymitramod['created_at']
+                    ];
+                }
+            }
+
+            //mitra sj
+            $querymitrasj = DB::select("
+            select distinct a.id,a.code,a.created_at from marketing_order_delivery_processes a 
+            left join marketing_order_delivery_process_details b on a.id=b.marketing_order_delivery_process_id
+            left join marketing_order_delivery_details c on c.id=b.marketing_order_delivery_detail_id and c.deleted_at is null
+            left join marketing_order_deliveries d on d.id=c.marketing_order_delivery_id and d.deleted_at is null and d.void_date is null
+            left join marketing_order_details e on e.id=c.marketing_order_detail_id and e.deleted_at is null
+            left join marketing_orders f on f.id=e.marketing_order_id and f.deleted_at is null and f.void_date is null
+            where f.document_no='" . $mitramocode . "' and a.void_date is null and a.deleted_at is null
+        ");
+
+            if ($querymitrasj) {
+                foreach ($querymitrasj as $row) {
+                    $mitrasj = $querymitrasj['id'];
+                    $tracking[] = [
+                        'name' => 'Surat Jalan',
+                        'code' => $querymitrasj['code'],
+                        'date' => $querymitrasj['created_at']
+                    ];
+                }
+            }
+
+            //mitra sj keluar pabrik
+            $querymitrasatpam = DB::select("
+            select distinct created_at from marketing_order_delivery_process_tracks
+            where marketing_order_delivery_process_id='" . $mitrasj . "' and deleted_at is null and status=1
+        ");
+
+            if ($querymitrasatpam) {
+                foreach ($querymitrasatpam as $row) {
+                    $tracking[] = [
+                        'name' => 'Keluar Pabrik',
+                        'code' => $mitrasj,
+                        'date' => $querymitrasatpam['created_at']
+                    ];
+                }
+            }
+
+
+            $tracking = json_decode(json_encode($tracking));
+
+            $data = [];
+            if ($tracking) {
+             
+
+                foreach ($tracking as $row) {
                     $data[] = [
-                        'code'          => $row->kode,
-                        'name'           => $row->name,
-                        'shading'           => $row->shading,
-                        'qty'         => round($row->stock, 2),
-                        'uom' => 'M2'
+                        'status'          => $row->name,
+                        'code'          => $row->code,
+                        'date'           => $row->date,
+
                     ];
                 }
 
+                return apiResponse(true, 200, 'Data ditemukan', $data, []);
 
-                $response = [
-                    'status'    => 200,
-                    'data'      => $data,
-                ];
+               
             } else {
-                $response = [
-                    'status'    => 401,
-                    'message'   => 'Data tidak ditemukan.'
-                ];
+                return apiResponse(true, 200, 'Data Tidak ditemukan', $data, []);
             }
         } else {
-            $response = [
-                'status'    => 401,
-                'message'   => 'Token tidak ditemukan'
-            ];
+            return apiResponse(false, 401, 'Token tidak valid', null, []);
         }
 
         return response()->json($response);
     }
-
 }
