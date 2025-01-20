@@ -213,7 +213,7 @@ class MitraCustomerController extends Controller
                 try {
                     //cek kode provinsi
                     $errorMessage = [];
-                    $errorMessage = $this->cek_kode_area([], $request->province_code, $request->city_code, $request->district_code);
+                    $errorMessage = $this->cek_kode_area($errorMessage, $request->province_code, $request->city_code, $request->district_code);
                     if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area tidak valid", $errorMessage, []); }
 
                     $cek_kode_customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $request->code)->first();
@@ -251,7 +251,8 @@ class MitraCustomerController extends Controller
                     
                     foreach($request->delivery_address as $row){
                         if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
-                        $errorMessage[] = $this->cek_kode_area([], $row['province_code'], $row['city_code'], $row['district_code']);
+                        $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
+                        Log::info($errorMessage);
                         if(count($errorMessage) > 0) { return apiResponse(false, 422, "delivery_address tidak valid", $errorMessage, []); }
 
                         MitraCustomerDelivery::create([
@@ -267,7 +268,7 @@ class MitraCustomerController extends Controller
                     foreach($request->billing_address as $row){
                         if(!$row['name']) { $errorMessage[] = "Nama untuk dokumen penagihan harus diisi"; }
                         if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
-                        $errorMessage[] = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
+                        $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
                         if(count($errorMessage) > 0) { return apiResponse(false, 422, "billing_address tidak valid", $errorMessage, []); }
                         
                         MitraCustomerBilling::create([
@@ -386,7 +387,8 @@ class MitraCustomerController extends Controller
                         $customer->billing_address()->delete();
 
                         foreach($request->delivery_address as $row){
-                            $errorMessage = $this->cek_kode_area([], $row['province_code'], $row['city_code'], $row['district_code']);
+                            if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
+                            $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
                             if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area pengiriman tidak valid", $errorMessage, []); }
     
                             MitraCustomerDelivery::create([
@@ -402,7 +404,7 @@ class MitraCustomerController extends Controller
                         foreach($request->billing_address as $row){
                             if(!$row['name']) { $errorMessage[] = "Nama untuk dokumen penagihan harus diisi"; }
                             if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
-                            $errorMessage[] = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
+                            $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
                             if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area penagihan tidak valid", $errorMessage, []); }
     
                             MitraCustomerBilling::create([
