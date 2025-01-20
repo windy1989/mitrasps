@@ -25,9 +25,7 @@ class RegionController extends Controller
                 'name' => $row->name,
             ];
         }
-
         return apiResponse(true, 200, 'Data area ditampilkan', $data, []);
-        
     }
 
     public function getAreaBulk(Request $request, $provinceCode='', $cityCode=''){

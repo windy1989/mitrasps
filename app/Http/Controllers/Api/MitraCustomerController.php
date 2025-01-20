@@ -52,28 +52,37 @@ class MitraCustomerController extends Controller
                         'phone'            => $row->phone,
                         'email'            => $row->email,
                         'address'          => $row->address,
-                        'province'         => ["province_code" => $row->province->code, "province_name" => $row->province->name],
-                        'city'             => ["city_code"     => $row->city->code,     "city_name"     => $row->city->name],
-                        'district'         => ["district_code" => $row->district->code, "district_name" => $row->district->name],
+                        'province_code'    => $row->province->code,
+                        'province_name'    => $row->province->name,
+                        'city_code'        => $row->city->code,
+                        'city_name'        => $row->city->name,
+                        'district_code'    => $row->district->code,
+                        'district_name'    => $row->district->name,
                         'id_card'          => $row->id_card,
                         'pic_name'         => $row->pic_name,
                         'pic_address'      => $row->pic_address,
                         'limit_credit'     => $row->limit_credit,
                         'top'              => $row->top,
                         'delivery_address' => $delivery_address==null ? null : ([
-                            "address"  => $delivery_address->address,
-                            "province" => $delivery_address->province->name,
-                            "city"     => $delivery_address->city->name,
-                            "district" => $delivery_address->district->name,
+                            'address'       => $delivery_address->address,
+                            'province_code' => $delivery_address->province->code,
+                            'province_name' => $delivery_address->province->name,
+                            'city_code'     => $delivery_address->city->code,
+                            'city_name'     => $delivery_address->city->name,
+                            'district_code' => $delivery_address->district->code,
+                            'district_name' => $delivery_address->district->name,
                         ]),
                         'billing_address'  => $delivery_address==null ? null : ([
-                            "name"     => $billing_address->name,
-                            "notes"    => $billing_address->notes,
-                            "npwp"     => $billing_address->npwp,
-                            "address"  => $billing_address->address,
-                            "province" => $billing_address->province->name,
-                            "city"     => $billing_address->city->name,
-                            "district" => $billing_address->district->name,
+                            'name'          => $billing_address->name,
+                            'notes'         => $billing_address->notes,
+                            'npwp'          => $billing_address->npwp,
+                            'address'       => $billing_address->address,
+                            'province_code' => $billing_address->province->code,
+                            'province_name' => $billing_address->province->name,
+                            'city_code'     => $billing_address->city->code,
+                            'city_name'     => $billing_address->city->name,
+                            'district_code' => $billing_address->district->code,
+                            'district_name' => $billing_address->district->name,
                         ]),
                         'created_at'       => $row->created_at,
                         'updated_at'       => $row->updated_at,
@@ -102,39 +111,48 @@ class MitraCustomerController extends Controller
                 $billing_address  = MitraCustomerBilling::where('mitra_customer_id', $customer->id)->first();
 
                 $data = [
-                    'code'         => $customer->code,
-                    'name'         => $customer->name,
-                    'type'         => $customer->type,
-                    'branch_code'  => $customer->branch_code,
-                    'phone'        => $customer->phone,
-                    'email'        => $customer->email,
-                    'address'      => $customer->address,
-                    'province'     => ["province_code" => $customer->province->code, "province_name" => $customer->province->name],
-                    'city'         => ["city_code" => $customer->city->code, "city_name" => $customer->city->name],
-                    'district'     => ["district_code" => $customer->district->code, "district_name" => $customer->district->name],
-                    'id_card'      => $customer->id_card,
-                    'pic_name'     => $customer->pic_name,
-                    'pic_address'  => $customer->pic_address,
-                    'limit_credit' => $customer->limit_credit,
-                    'top'          => $customer->top,
+                    'code'          => $customer->code,
+                    'name'             => $customer->name,
+                    'type'             => $customer->type,
+                    'branch_code'      => $customer->branch_code,
+                    'phone'            => $customer->phone,
+                    'email'            => $customer->email,
+                    'address'          => $customer->address,
+                    'province_code'    => $customer->province->code,
+                    'province_name'    => $customer->province->name,
+                    'city_code'        => $customer->city->code,
+                    'city_name'        => $customer->city->name,
+                    'district_code'    => $customer->district->code,
+                    'district_name'    => $customer->district->name,
+                    'id_card'          => $customer->id_card,
+                    'pic_name'         => $customer->pic_name,
+                    'pic_address'      => $customer->pic_address,
+                    'limit_credit'     => $customer->limit_credit,
+                    'top'              => $customer->top,
                     'delivery_address' => $delivery_address==null ? null : ([
-                            "address"  => $delivery_address->address,
-                            "province" => $delivery_address->province->name,
-                            "city"     => $delivery_address->city->name,
-                            "district" => $delivery_address->district->name,
+                            'address'       => $delivery_address->address,
+                            'province_code' => $delivery_address->province->code,
+                            'province_name' => $delivery_address->province->name,
+                            'city_code'     => $delivery_address->city->code,
+                            'city_name'     => $delivery_address->city->name,
+                            'district_code' => $delivery_address->district->code,
+                            'district_name' => $delivery_address->district->name,
                         ]),
                     'billing_address'  => $delivery_address==null ? null : ([
-                            "name"     => $billing_address->name,
-                            "notes"    => $billing_address->notes,
-                            "npwp"     => $billing_address->npwp,
-                            "address"  => $billing_address->address,
-                            "province" => $billing_address->province->name,
-                            "city"     => $billing_address->city->name,
-                            "district" => $billing_address->district->name,
+                            'name'          => $billing_address->name,
+                            'notes'         => $billing_address->notes,
+                            'npwp'          => $billing_address->npwp,
+                            'address'       => $billing_address->address,
+                            'province_code' => $billing_address->province->code,
+                            'province_name' => $billing_address->province->name,
+                            'city_code'     => $billing_address->city->code,
+                            'city_name'     => $billing_address->city->name,
+                            'district_code' => $billing_address->district->code,
+                            'district_name' => $billing_address->district->name,
                         ]),
-                    'created_at'   => $customer->created_at,
-                    'updated_at'   => $customer->updated_at,
-                    'deleted_at'   => $customer->deleted_at,
+                    'created_at'      => $customer->created_at,
+                    'updated_at'      => $customer->updated_at,
+                    'deleted_at'      => $customer->deleted_at,
                 ];
             
                 return apiResponse(true, 200, 'Data customer ditampilkan', $data, []);
@@ -160,7 +178,7 @@ class MitraCustomerController extends Controller
                 'province_code'    => 'required',
                 'city_code'        => 'required',
                 'district_code'    => 'required',
-                // 'id_card'         => 'required',
+                'id_card'         => 'required',
                 'pic_name'         => 'required',
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
@@ -168,7 +186,7 @@ class MitraCustomerController extends Controller
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
-                'code.required' => 'Kode Customer tidak boleh kosong.',
+                'code.required'             => 'Kode Customer tidak boleh kosong.',
                 // 'code.unique'               => 'Kode Customer sudah pernah ada.',
                 'name.required'             => 'Nama Customer tidak boleh kosong.',
                 'type.required'             => 'Type Customer tidak boleh kosong.',
@@ -179,12 +197,11 @@ class MitraCustomerController extends Controller
                 'province_code.required'    => 'province_code tidak boleh kosong.',
                 'city_code.required'        => 'city_code tidak boleh kosong.',
                 'district_code.required'    => 'district_code tidak boleh kosong.',
-                // 'id_card.required'          => 'No. KTP tidak boleh kosong.',
+                'id_card.required'          => 'No. KTP tidak boleh kosong.',
                 'pic_name.required'         => 'Nama PIC tidak boleh kosong.',
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
                 // 'top.required'              => 'TOP tidak boleh kosong.',
-                'npwp.required'             => 'NPWP tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
             ]);
@@ -233,8 +250,9 @@ class MitraCustomerController extends Controller
                     ]);
                     
                     foreach($request->delivery_address as $row){
-                        $errorMessage = $this->cek_kode_area([], $row['province_code'], $row['city_code'], $row['district_code']);
-                        if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area pengiriman tidak valid", $errorMessage, []); }
+                        if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
+                        $errorMessage[] = $this->cek_kode_area([], $row['province_code'], $row['city_code'], $row['district_code']);
+                        if(count($errorMessage) > 0) { return apiResponse(false, 422, "delivery_address tidak valid", $errorMessage, []); }
 
                         MitraCustomerDelivery::create([
                             'mitra_customer_id' => $query->id,
@@ -247,9 +265,11 @@ class MitraCustomerController extends Controller
                     }
 
                     foreach($request->billing_address as $row){
-                        $errorMessage = $this->cek_kode_area([], $row['province_code'], $row['city_code'], $row['district_code']);
-                        if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area penagihan tidak valid", $errorMessage, []); }
-
+                        if(!$row['name']) { $errorMessage[] = "Nama untuk dokumen penagihan harus diisi"; }
+                        if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
+                        $errorMessage[] = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
+                        if(count($errorMessage) > 0) { return apiResponse(false, 422, "billing_address tidak valid", $errorMessage, []); }
+                        
                         MitraCustomerBilling::create([
                             'mitra_customer_id' => $query->id,
                             'name'              => $row['name'],
@@ -303,7 +323,7 @@ class MitraCustomerController extends Controller
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
-                'code.required' => 'Kode Customer tidak boleh kosong.',
+                'code.required'             => 'Kode Customer tidak boleh kosong.',
                 // 'code.unique'               => 'Kode Customer sudah pernah ada.',
                 'name.required'             => 'Nama Customer tidak boleh kosong.',
                 'type.required'             => 'Type Customer tidak boleh kosong.',
@@ -332,6 +352,8 @@ class MitraCustomerController extends Controller
                     $customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $code)->where('status', '1')->first();
                     //kalau kode sudah ada
                     if($customer){
+                        $errorMessage = $this->cek_kode_area([], $request->province_code, $request->city_code, $request->district_code);
+                        if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area tidak valid", $errorMessage, []); }
                         //kalau kode sudah ada tapi didelete, restore
                         //kalau kode sudah ada, update data
                         
@@ -359,9 +381,47 @@ class MitraCustomerController extends Controller
                         // $customer->top_internal    = $top_internal;
                         $customer->save();
                         
-                        return apiResponse(false, 422, "Data Customer berhassil diupdate.", null, []);
+
+                        $customer->delivery_address()->delete();
+                        $customer->billing_address()->delete();
+
+                        foreach($request->delivery_address as $row){
+                            $errorMessage = $this->cek_kode_area([], $row['province_code'], $row['city_code'], $row['district_code']);
+                            if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area pengiriman tidak valid", $errorMessage, []); }
+    
+                            MitraCustomerDelivery::create([
+                                'mitra_customer_id' => $customer->id,
+                                'address'           => $row['address'],
+                                'country_id'        => 103,
+                                'province_id'       => Region::where('code', $row['province_code'])->first()->id,
+                                'city_id'           => Region::where('code', $row['city_code'])->first()->id,
+                                'district_id'       => Region::where('code', $row['district_code'])->first()->id,
+                            ]);
+                        }
+    
+                        foreach($request->billing_address as $row){
+                            if(!$row['name']) { $errorMessage[] = "Nama untuk dokumen penagihan harus diisi"; }
+                            if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
+                            $errorMessage[] = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
+                            if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area penagihan tidak valid", $errorMessage, []); }
+    
+                            MitraCustomerBilling::create([
+                                'mitra_customer_id' => $customer->id,
+                                'name'              => $row['name'],
+                                'notes'             => $row['notes'],
+                                'npwp'              => $row['npwp'],
+                                'address'           => $row['address'],
+                                'country_id'        => 103,
+                                'province_id'       => Region::where('code', $row['province_code'])->first()->id,
+                                'city_id'           => Region::where('code', $row['city_code'])->first()->id,
+                                'district_id'       => Region::where('code', $row['district_code'])->first()->id,
+                            ]);
+                        }
+                        
+                        DB::commit();
+                        return apiResponse(true, 200, "Data customer berhasil diupdate.", null, []);
                     }else{
-                        return apiResponse(false, 422, "Data Customer tidak ditemukan.", null, []);
+                        return apiResponse(false, 422, "Data customer tidak ditemukan.", null, []);
                     }
                 }
                 catch(\Exception $e){
@@ -376,12 +436,19 @@ class MitraCustomerController extends Controller
         }
     }
 
-    public function delete(Request $request){
+    public function delete(Request $request, $code){
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
-            $customer = MitraCustomer::create($request->all);
-    
-            return response()->json($customer, 200); // 200 success, 201 created, 202 accepted
+            $code = base64_decode($code);
+            $customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $code)->where('status', '1')->first();
+
+            if($customer){
+                $customer->delete();
+                
+                return apiResponse(true, 200, "Data customer berhasil dihapus.", null, []);
+            }else{
+                return apiResponse(false, 422, "Data customer tidak ditemukan.", null, []);
+            }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
         }

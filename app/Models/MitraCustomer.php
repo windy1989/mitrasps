@@ -48,4 +48,11 @@ class MitraCustomer extends Model{
         return $this->belongsTo('App\Models\Region','district_id','id')->withTrashed();
     }
 
+    public function delivery_address(){
+        return $this->hasMany('App\Models\MitraCustomerDelivery', 'mitra_customer_id', 'id');
+    }
+
+    public function billing_address(){
+        return $this->hasMany('App\Models\MitraCustomerBilling', 'mitra_customer_id', 'id');
+    }
 }
