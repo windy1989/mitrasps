@@ -29,7 +29,6 @@ Route::prefix('tracking')->group(function () {
 
 Route::get('/all_area/{provinceCode?}/{cityCode?}', [RegionController::class, 'getAreaBulk']);
 
-/*
 Route::prefix('province')->group(function (){
     Route::get('/', [RegionController::class, 'getAllProvinces']);
     Route::get('/{code}', [RegionController::class, 'getProvince']);
@@ -44,7 +43,6 @@ Route::prefix('district')->group(function (){
     Route::get('/filterCity/{cityCode}', [RegionController::class, 'getDistrictByCity']);
     Route::get('/{code}', [RegionController::class, 'getDistrict']);
 });
-*/
 
 Route::prefix('customer')->group(function (){
     Route::get('/', [MitraCustomerController::class, 'getDataAll']);
