@@ -24,18 +24,15 @@ class MitraMarketingOrderController extends Controller
                 'document_no'            => 'required',
                 'customer_code'          => 'required',
                 'branch_code'            => 'required',
-                'type'                   => 'required',
                 'post_date'              => 'required',
                 'valid_date'             => 'required',
                 'type_delivery'          => 'required',
                 'delivery_date'          => 'required',
-                'delivery_schedule'      => 'required',
                 'delivery_address'       => 'required',
                 'delivery_province_code' => 'required',
                 'delivery_city_code'     => 'required',
                 'delivery_district_code' => 'required',
                 'payment_type'           => 'required',
-                'dp_type'                => $request->payment_type == '1' ? 'required' : '',
                 'percent_dp'             => $request->payment_type == '1' ? 'required' : '',
                 'total'                  => 'required',
                 'tax'                    => 'required|integer|min:0',
@@ -45,18 +42,15 @@ class MitraMarketingOrderController extends Controller
                 'document_no.required'            => 'Kode dokumen penghubung tidak boleh kosong.',
                 'customer_code.required'          => 'Kode Customer tidak boleh kosong.',
                 'branch_code.required'            => 'Kode Branch tidak boleh kosong.',
-                'type.required'                   => 'Tipe SO tidak boleh kosong. 1 : proyek, 2 : retail, 3 : khusus, 4 : sample.',
                 'post_date.required'              => 'Tanggal post tidak boleh kosong.',
                 'valid_date.required'             => 'Tanggal valid SO tidak boleh kosong.',
                 'type_delivery.required'          => 'Tipe pengiriman tidak boleh kosong. 1 : loco, 2 : franco.',
                 'delivery_date.required'          => 'Tanggal permintaan pengiriman tidak boleh kosong.',
-                'delivery_schedule.required'      => 'Status pengiriman tidak boleh kosong. 1 : Segera, 2 : Terjadwal, 3 : Belum Terjadwal.',
                 'delivery_address.required'       => 'Alamat pengiriman tidak boleh kosong.',
                 'delivery_province_code.required' => 'Provinsi pengiriman tidak boleh kosong.',
                 'delivery_city_code.required'     => 'Kota/Kabupaten pengiriman tidak boleh kosong.',
                 'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
                 'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
-                'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
                 'percent_dp.required'             => 'Prosentase DP tidak boleh kosong.',
                 'total.required'                  => 'Total tidak boleh kosong.',
                 'tax.required'                    => 'Pajak utama tidak boleh kosong.',
@@ -87,26 +81,12 @@ class MitraMarketingOrderController extends Controller
                         $errorMessage[] = 'Customer tidak ditemukan atau belum diapprove oleh marketing.';
                     }
 
-                    if(!in_array($request->type,['1','2','3','4'])){
-                        $errorMessage[] = 'Tipe SO harap diisikan "1" : Proyek / "2" : Retail / "3" : Khusus / "4" : Sample.';
-                    }
-
                     if(!in_array($request->type_delivery,['1','2'])){
                         $errorMessage[] = 'Tipe Pengiriman harap diisikan "1" : Loco / "2" : Franco';
                     }
 
-                    if(!in_array($request->delivery_schedule,['1','2'])){
-                        $errorMessage[] = 'Status pembelian harap diisikan "1" : Segera / "2" : Terjadwal / "3" : Belum Terjadwal.';
-                    }
-
                     if(!in_array($request->payment_type,['1','2'])){
                         $errorMessage[] = 'Status pembelian harap diisikan "1" : DP / "2" : Kredit.';
-                    }
-
-                    if($request->payment_type == '1'){
-                        if(!in_array($request->dp_type,['1','2'])){
-                            $errorMessage[] = 'Status pembelian harap diisikan "1" : Proporsional, "2" : FIFO.';
-                        }
                     }
 
                     foreach($request->details as $key => $row){
@@ -125,20 +105,17 @@ class MitraMarketingOrderController extends Controller
                                 'code'                   => $newCode,
                                 'user_id'                => $cek->id,
                                 'account_id'             => $customer->id,
-                                'type'                   => $request->type,
                                 'post_date'              => $request->post_date,
                                 'valid_date'             => $request->valid_date,
                                 'document_no'            => $request->document_no,
                                 'branch_code'            => $request->branch_code,
                                 'type_delivery'          => $request->type_delivery,
                                 'delivery_date'          => $request->delivery_date,
-                                'delivery_schedule'      => $request->delivery_schedule,
                                 'delivery_address'       => $request->delivery_address,
                                 'delivery_province_code' => $request->delivery_province_code,
                                 'delivery_city_code'     => $request->delivery_city_code,
                                 'delivery_district_code' => $request->delivery_district_code,
                                 'payment_type'           => $request->payment_type,
-                                'dp_type'                => $request->dp_type ?? NULL,
                                 'percent'                => $request->percent_dp ?? NULL,
                                 'note'                   => $request->note,
                                 'total'                  => $request->total,
@@ -208,18 +185,15 @@ class MitraMarketingOrderController extends Controller
                 'document_no'            => 'required',
                 'customer_code'          => 'required',
                 'branch_code'            => 'required',
-                'type'                   => 'required',
                 'post_date'              => 'required',
                 'valid_date'             => 'required',
                 'type_delivery'          => 'required',
                 'delivery_date'          => 'required',
-                'delivery_schedule'      => 'required',
                 'delivery_address'       => 'required',
                 'delivery_province_code' => 'required',
                 'delivery_city_code'     => 'required',
                 'delivery_district_code' => 'required',
                 'payment_type'           => 'required',
-                'dp_type'                => $request->payment_type == '1' ? 'required' : '',
                 'percent_dp'             => $request->payment_type == '1' ? 'required' : '',
                 'total'                  => 'required',
                 'tax'                    => 'required',
@@ -229,18 +203,15 @@ class MitraMarketingOrderController extends Controller
                 'document_no.required'            => 'Kode dokumen penghubung tidak boleh kosong.',
                 'customer_code.required'          => 'Kode Customer tidak boleh kosong.',
                 'branch_code.required'            => 'Kode Branch tidak boleh kosong.',
-                'type.required'                   => 'Tipe SO tidak boleh kosong. 1 : proyek, 2 : retail, 3 : khusus, 4 : sample.',
                 'post_date.required'              => 'Tanggal post tidak boleh kosong.',
                 'valid_date.required'             => 'Tanggal valid SO tidak boleh kosong.',
                 'type_delivery.required'          => 'Tipe pengiriman tidak boleh kosong. 1 : loco, 2 : franco.',
                 'delivery_date.required'          => 'Tanggal permintaan pengiriman tidak boleh kosong.',
-                'delivery_schedule.required'      => 'Status pengiriman tidak boleh kosong. 1 : Segera, 2 : Terjadwal, 3 : Belum Terjadwal.',
                 'delivery_address.required'       => 'Alamat pengiriman tidak boleh kosong.',
                 'delivery_province_code.required' => 'Provinsi pengiriman tidak boleh kosong.',
                 'delivery_city_code.required'     => 'Kota/Kabupaten pengiriman tidak boleh kosong.',
                 'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
                 'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
-                'dp_type.required'                => 'Tipe DP tidak boleh kosong. 1 : Proporsional, 2 : FIFO.',
                 'percent_dp.required'             => 'Prosentase DP tidak boleh kosong.',
                 'total.required'                  => 'Total tidak boleh kosong.',
                 'tax.required'                    => 'Pajak tidak boleh kosong.',
@@ -267,26 +238,12 @@ class MitraMarketingOrderController extends Controller
                             $errorMessage[] = 'Customer tidak ditemukan.';
                         }
 
-                        if(!in_array($request->type,['1','2','3','4'])){
-                            $errorMessage[] = 'Tipe SO harap diisikan "1" : Proyek / "2" : Retail / "3" : Khusus / "4" : Sample.';
-                        }
-
                         if(!in_array($request->type_delivery,['1','2'])){
                             $errorMessage[] = 'Tipe Pengiriman harap diisikan "1" : Loco / "2" : Franco';
                         }
 
-                        if(!in_array($request->delivery_schedule,['1','2'])){
-                            $errorMessage[] = 'Status pembelian harap diisikan "1" : Segera / "2" : Terjadwal / "3" : Belum Terjadwal.';
-                        }
-
                         if(!in_array($request->payment_type,['1','2'])){
                             $errorMessage[] = 'Status pembelian harap diisikan "1" : DP / "2" : Kredit.';
-                        }
-
-                        if($request->payment_type == '1'){
-                            if(!in_array($request->dp_type,['1','2'])){
-                                $errorMessage[] = 'Status pembelian harap diisikan "1" : Proporsional, "2" : FIFO.';
-                            }
                         }
 
                         foreach($request->details as $key => $row){
@@ -300,20 +257,17 @@ class MitraMarketingOrderController extends Controller
                         if(count($errorMessage) == 0){
                             $query->user_id                = $cek->id;
                             $query->account_id             = $customer->id;
-                            $query->type                   = $request->type;
                             $query->post_date              = $request->post_date;
                             $query->valid_date             = $request->valid_date;
                             $query->document_no            = $request->document_no;
                             $query->branch_code            = $request->branch_code;
                             $query->type_delivery          = $request->type_delivery;
                             $query->delivery_date          = $request->delivery_date;
-                            $query->delivery_schedule      = $request->delivery_schedule;
                             $query->delivery_address       = $request->delivery_address;
                             $query->delivery_province_code = $request->delivery_province_code;
                             $query->delivery_city_code     = $request->delivery_city_code;
                             $query->delivery_district_code = $request->delivery_district_code;
                             $query->payment_type           = $request->payment_type;
-                            $query->dp_type                = $request->dp_type ?? NULL;
                             $query->percent                = $request->percent_dp ?? NULL;
                             $query->note                   = $request->note;
                             $query->total                  = $request->total;
@@ -402,19 +356,16 @@ class MitraMarketingOrderController extends Controller
                 $data = [
                     'code'              => $query->code,
                     'customer'          => $query->account->name,
-                    'type'              => $query->type(),
                     'post_date'         => $query->post_date,
                     'valid_date'        => $query->valid_date,
                     'document_no'       => $query->document_no,
                     'type_delivery'     => $query->deliveryType(),
                     'delivery_date'     => $query->delivery_date,
-                    'delivery_schedule' => $query->deliverySchedule(),
                     'delivery_address'  => $query->delivery_address,
                     'delivery_province' => $query->deliveryProvince->name,
                     'delivery_city'     => $query->deliveryCity->name,
                     'delivery_district' => $query->deliveryDistrict->name,
                     'payment_type'      => $query->paymentType(),
-                    'dp_type'           => $query->dpType(),
                     'note'              => $query->note,
                     'status'            => $query->statusRaw(),
                     'total'             => round($query->total,2),
@@ -467,19 +418,16 @@ class MitraMarketingOrderController extends Controller
                     $data[] = [
                         'code'              => $query->code,
                         'customer'          => $query->account->name,
-                        'type'              => $query->type(),
                         'post_date'         => $query->post_date,
                         'valid_date'        => $query->valid_date,
                         'document_no'       => $query->document_no,
                         'type_delivery'     => $query->deliveryType(),
                         'delivery_date'     => $query->delivery_date,
-                        'delivery_schedule' => $query->deliverySchedule(),
                         'delivery_address'  => $query->delivery_address,
                         'delivery_province' => $query->deliveryProvince->name,
                         'delivery_city'     => $query->deliveryCity->name,
                         'delivery_district' => $query->deliveryDistrict->name,
                         'payment_type'      => $query->paymentType(),
-                        'dp_type'           => $query->dpType(),
                         'note'              => $query->note,
                         'status'            => $query->statusRaw(),
                         'total'             => round($query->total,2),

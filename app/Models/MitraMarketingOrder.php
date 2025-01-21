@@ -20,20 +20,17 @@ class MitraMarketingOrder extends Model
         'code',
         'user_id',
         'account_id',
-        'type',
         'post_date',
         'valid_date',
         'document_no',
         'branch_code',
         'type_delivery',
         'delivery_date',
-        'delivery_schedule',
         'delivery_address',
         'delivery_province_code',
         'delivery_city_code',
         'delivery_district_code',
         'payment_type',
-        'dp_type',
         'percent_dp',
         'note',
         'total',
@@ -90,39 +87,6 @@ class MitraMarketingOrder extends Model
         $type = match ($this->payment_type) {
             '1' => 'DP',
             '2' => 'Credit',
-            default => 'Invalid',
-        };
-
-        return $type;
-    }
-
-    public function dpType(){
-        $dp_type = match ($this->dp_type) {
-            '1' => 'Proporsional',
-            '2' => 'FIFO',
-            default => '-',
-        };
-
-        return $dp_type;
-    }
-
-    public function deliverySchedule(){
-        $delivery_schedule = match ($this->delivery_schedule) {
-            '1' => 'Segera',
-            '2' => 'Terjadwal',
-            '3' => 'Belum Terjadwal',
-            default => 'Invalid',
-        };
-
-        return $delivery_schedule;
-    }
-
-    public function type(){
-        $type = match ($this->type) {
-            '1' => 'Proyek',
-            '2' => 'Retail',
-            '3' => 'Khusus',
-            '4' => 'Sample',
             default => 'Invalid',
         };
 
