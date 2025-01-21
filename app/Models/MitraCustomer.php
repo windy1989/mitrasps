@@ -16,7 +16,7 @@ class MitraCustomer extends Model{
     protected $fillable   = [
         'code',             // code customer dari mitra
         'name',             // nama customer dari mitra
-        'type',
+        'type',             // PT, CV, Badan Usaha, Perorangan
         'branch_code',      // keterangan cabang mitra
         'phone',
         'email',
