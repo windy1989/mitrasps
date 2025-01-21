@@ -173,7 +173,7 @@ class MitraCustomerController extends Controller
                 'type'             => 'required',
                 'branch_code'      => 'required',
                 'phone'            => 'required',
-                'email'            => 'required',
+                // 'email'            => 'required',
                 'address'          => 'required',
                 'province_code'    => 'required',
                 'city_code'        => 'required',
@@ -192,7 +192,7 @@ class MitraCustomerController extends Controller
                 'type.required'             => 'Type Customer tidak boleh kosong.',
                 'branch.required'           => 'Keterangan Cabang tidak boleh kosong.',
                 'phone.required'            => 'No. HP Customer tidak boleh kosong.',
-                'email.required'            => 'Email Customer tidak boleh kosong.',
+                // 'email.required'            => 'Email Customer tidak boleh kosong.',
                 'address.required'          => 'Alamat Customer tidak boleh kosong.',
                 'province_code.required'    => 'province_code tidak boleh kosong.',
                 'city_code.required'        => 'city_code tidak boleh kosong.',
@@ -252,7 +252,6 @@ class MitraCustomerController extends Controller
                     foreach($request->delivery_address as $row){
                         if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
                         $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
-                        Log::info($errorMessage);
                         if(count($errorMessage) > 0) { return apiResponse(false, 422, "delivery_address tidak valid", $errorMessage, []); }
 
                         MitraCustomerDelivery::create([
@@ -311,7 +310,7 @@ class MitraCustomerController extends Controller
                 'type'             => 'required',
                 'branch_code'      => 'required',
                 'phone'            => 'required',
-                'email'            => 'required',
+                // 'email'            => 'required',
                 'address'          => 'required',
                 'province_code'    => 'required',
                 'city_code'        => 'required',
@@ -330,7 +329,7 @@ class MitraCustomerController extends Controller
                 'type.required'             => 'Type Customer tidak boleh kosong.',
                 'branch.required'           => 'Keterangan Cabang tidak boleh kosong.',
                 'phone.required'            => 'No. HP Customer tidak boleh kosong.',
-                'email.required'            => 'Email Customer tidak boleh kosong.',
+                // 'email.required'            => 'Email Customer tidak boleh kosong.',
                 'address.required'          => 'Alamat Customer tidak boleh kosong.',
                 'province_code.required'    => 'province_code tidak boleh kosong.',
                 'city_code.required'        => 'city_code tidak boleh kosong.',
