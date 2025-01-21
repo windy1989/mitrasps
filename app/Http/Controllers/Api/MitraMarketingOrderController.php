@@ -116,7 +116,7 @@ class MitraMarketingOrderController extends Controller
                                 'delivery_city_code'     => $request->delivery_city_code,
                                 'delivery_district_code' => $request->delivery_district_code,
                                 'payment_type'           => $request->payment_type,
-                                'percent'                => $request->percent_dp ?? NULL,
+                                'percent_dp'             => $request->percent_dp ?? NULL,
                                 'note'                   => $request->note,
                                 'total'                  => $request->total,
                                 'tax'                    => $request->tax,
@@ -268,7 +268,7 @@ class MitraMarketingOrderController extends Controller
                             $query->delivery_city_code     = $request->delivery_city_code;
                             $query->delivery_district_code = $request->delivery_district_code;
                             $query->payment_type           = $request->payment_type;
-                            $query->percent                = $request->percent_dp ?? NULL;
+                            $query->percent_dp             = $request->percent_dp ?? NULL;
                             $query->note                   = $request->note;
                             $query->total                  = $request->total;
                             $query->tax                    = $request->tax;
