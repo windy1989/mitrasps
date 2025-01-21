@@ -63,6 +63,7 @@ class MitraCustomerController extends Controller
                         'pic_address'      => $row->pic_address,
                         'limit_credit'     => $row->limit_credit,
                         'top'              => $row->top,
+                        'status_approval'  => $row->status_approval(),
                         'delivery_address' => $delivery_address==null ? null : ([
                             'address'       => $delivery_address->address,
                             'province_code' => $delivery_address->province->code,
@@ -129,6 +130,7 @@ class MitraCustomerController extends Controller
                     'pic_address'      => $customer->pic_address,
                     'limit_credit'     => $customer->limit_credit,
                     'top'              => $customer->top,
+                    'status_approval'  => $customer->status_approval(),
                     'delivery_address' => $delivery_address==null ? null : ([
                             'address'       => $delivery_address->address,
                             'province_code' => $delivery_address->province->code,
@@ -244,9 +246,9 @@ class MitraCustomerController extends Controller
                         'limit_credit'    => $request->limit_credit,
                         'top'             => 90, //$request->top,
                         'top_internal'    => 90, //$top_internal,
-                        'status_approval' => 0,
+                        'status_approval' => 2,
                         'mitra_id'        => $cek->id,
-                        'status'          => 0,
+                        'status'          => 2,
                     ]);
                     
                     foreach($request->delivery_address as $row){
@@ -349,9 +351,13 @@ class MitraCustomerController extends Controller
             } else {
                 DB::beginTransaction();
                 try {
-                    $customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $code)->where('status', '1')->first();
+                    $customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $code)->whereIn('status', array('1','2'))->first(); // 1 aktif, 2 non aktif
                     //kalau kode sudah ada
                     if($customer){
+                        $errorMessage = [];
+                        if ($customer->status_approval == 2 || $customer->status_approval == 3){
+                            return apiResponse(false, 422, "Data sedang dalam tahap ".$customer->status_approval().", belum bisa diupdate", $errorMessage, []); 
+                        }
                         $errorMessage = $this->cek_kode_area([], $request->province_code, $request->city_code, $request->district_code);
                         if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area tidak valid", $errorMessage, []); }
                         //kalau kode sudah ada tapi didelete, restore
@@ -377,10 +383,10 @@ class MitraCustomerController extends Controller
                         $customer->pic_name        = $request->pic_name;
                         $customer->pic_address     = $request->pic_address;
                         $customer->limit_credit    = $request->limit_credit;
+                        $customer->status_approval = 3;
                         // $customer->top             = $request->top;
                         // $customer->top_internal    = $top_internal;
                         $customer->save();
-                        
 
                         $customer->delivery_address()->delete();
                         $customer->billing_address()->delete();
@@ -388,7 +394,7 @@ class MitraCustomerController extends Controller
                         foreach($request->delivery_address as $row){
                             if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
                             $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
-                            if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area pengiriman tidak valid", $errorMessage, []); }
+                            if(count($errorMessage) > 0) { return apiResponse(false, 422, "Data alamat pengiriman tidak valid", $errorMessage, []); }
     
                             MitraCustomerDelivery::create([
                                 'mitra_customer_id' => $customer->id,
@@ -404,7 +410,7 @@ class MitraCustomerController extends Controller
                             if(!$row['name']) { $errorMessage[] = "Nama untuk dokumen penagihan harus diisi"; }
                             if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
                             $errorMessage = $this->cek_kode_area($errorMessage, $row['province_code'], $row['city_code'], $row['district_code']);
-                            if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area penagihan tidak valid", $errorMessage, []); }
+                            if(count($errorMessage) > 0) { return apiResponse(false, 422, "Data alamat & dokumen penagihan tidak valid", $errorMessage, []); }
     
                             MitraCustomerBilling::create([
                                 'mitra_customer_id' => $customer->id,
@@ -444,8 +450,8 @@ class MitraCustomerController extends Controller
             $customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $code)->where('status', '1')->first();
 
             if($customer){
+                $customer->update(['status' => 2]);
                 $customer->delete();
-                
                 return apiResponse(true, 200, "Data customer berhasil dihapus.", null, []);
             }else{
                 return apiResponse(false, 422, "Data customer tidak ditemukan.", null, []);

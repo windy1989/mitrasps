@@ -30,10 +30,10 @@ class MitraCustomer extends Model{
         'limit_credit',
         'top',
         'top_internal',
-        'status_approval',  // approved & accepted / rejected
+        'status_approval',  // Status Approval: 1 Approved, 2 Pending Create, 3 Pending Update, 4 Rejected
         'user_id',          // link ID BP di table user (employee_no)
         'mitra_id',         // ID Broker (employee_no) dari table user
-        'status',
+        'status',           // Status: 2 Non Aktif, 1 Aktif
     ];
 
     public function province(){
@@ -54,5 +54,25 @@ class MitraCustomer extends Model{
 
     public function billing_address(){
         return $this->hasMany('App\Models\MitraCustomerBilling', 'mitra_customer_id', 'id');
+    }
+
+    public function status_approval(){
+        $status_approval = match ($this->status_approval) {
+            '1' => 'Approved',
+            '2' => 'Pending Insert',
+            '3' => 'Pending Update',
+            '4' => 'Rejected',
+            default => 'Invalid',
+        };
+        return $status_approval;
+    }
+
+    public function status(){
+        $status = match ($this->status) {
+            '1' => 'Active',
+            '2' => 'Not Active',
+            default => 'Invalid',
+        };
+        return $status;
     }
 }
