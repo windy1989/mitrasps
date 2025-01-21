@@ -356,7 +356,7 @@ class MitraCustomerController extends Controller
                     if($customer){
                         $errorMessage = [];
                         if ($customer->status_approval == 2 || $customer->status_approval == 3){
-                            return apiResponse(false, 422, "Data sedang dalam tahap ".$customer->status_approval().", belum bisa diupdate", $errorMessage, []); 
+                            return apiResponse(false, 422, "Status Customer sedang ".$customer->status_approval()." dan belum bisa diupdate lagi", $errorMessage, []); 
                         }
                         $errorMessage = $this->cek_kode_area([], $request->province_code, $request->city_code, $request->district_code);
                         if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area tidak valid", $errorMessage, []); }
