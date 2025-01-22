@@ -230,19 +230,19 @@ class MitraCustomerController extends Controller
                     // if($request->top == 42){ $top_internal = 48; }
 
                     $query = MitraCustomer::create([
-                        'code'            => $request->code,
-                        'name'            => $request->name,
-                        'type'            => $request->type,
-                        'branch_code'     => $request->branch_code,
+                        'code'            => strtoupper($request->code),
+                        'name'            => strtoupper($request->name),
+                        'type'            => strtoupper($request->type),
+                        'branch_code'     => strtoupper($request->branch_code),
                         'phone'           => $request->phone,
-                        'email'           => $request->email,
-                        'address'         => $request->address,
+                        'email'           => strtoupper($request->email),
+                        'address'         => strtoupper($request->address),
                         'province_id'     => Region::where('code', $request->province_code)->first()->id,
                         'city_id'         => Region::where('code', $request->city_code)->first()->id,
                         'district_id'     => Region::where('code', $request->district_code)->first()->id,
-                        'id_card'         => $request->id_card,
-                        'pic_name'        => $request->pic_name,
-                        'pic_address'     => $request->pic_address,
+                        'id_card'         => strtoupper($request->id_card),
+                        'pic_name'        => strtoupper($request->pic_name),
+                        'pic_address'     => strtoupper($request->pic_address),
                         'limit_credit'    => $request->limit_credit,
                         'top'             => 90, //$request->top,
                         'top_internal'    => 90, //$top_internal,
@@ -258,7 +258,7 @@ class MitraCustomerController extends Controller
 
                         MitraCustomerDelivery::create([
                             'mitra_customer_id' => $query->id,
-                            'address'           => $row['address'],
+                            'address'           => strtoupper($row['address']),
                             'country_id'        => 103,
                             'province_id'       => Region::where('code', $row['province_code'])->first()->id,
                             'city_id'           => Region::where('code', $row['city_code'])->first()->id,
@@ -274,10 +274,10 @@ class MitraCustomerController extends Controller
                         
                         MitraCustomerBilling::create([
                             'mitra_customer_id' => $query->id,
-                            'name'              => $row['name'],
-                            'notes'             => $row['notes'],
+                            'name'              => strtoupper($row['name']),
+                            'notes'             => strtoupper($row['notes']),
                             'npwp'              => $row['npwp'],
-                            'address'           => $row['address'],
+                            'address'           => strtoupper($row['address']),
                             'country_id'        => 103,
                             'province_id'       => Region::where('code', $row['province_code'])->first()->id,
                             'city_id'           => Region::where('code', $row['city_code'])->first()->id,
@@ -369,19 +369,19 @@ class MitraCustomerController extends Controller
                         // if($request->top == 56){ $top_internal = 66; }
                         // if($request->top == 42){ $top_internal = 48; }
 
-                        $customer->code            = $request->code;
-                        $customer->name            = $request->name;
-                        $customer->type            = $request->type;
-                        $customer->branch_code     = $request->branch_code;
+                        $customer->code            = strtoupper($request->code);
+                        $customer->name            = strtoupper($request->name);
+                        $customer->type            = strtoupper($request->type);
+                        $customer->branch_code     = strtoupper($request->branch_code);
                         $customer->phone           = $request->phone;
-                        $customer->email           = $request->email;
-                        $customer->address         = $request->address;
+                        $customer->email           = strtoupper($request->email);
+                        $customer->address         = strtoupper($request->address);
                         $customer->province_id     = Region::where('code', $request->province_code)->first()->id;
                         $customer->city_id         = Region::where('code', $request->city_code)->first()->id;
                         $customer->district_id     = Region::where('code', $request->district_code)->first()->id;
-                        $customer->id_card         = $request->id_card;
-                        $customer->pic_name        = $request->pic_name;
-                        $customer->pic_address     = $request->pic_address;
+                        $customer->id_card         = strtoupper($request->id_card);
+                        $customer->pic_name        = strtoupper($request->pic_name);
+                        $customer->pic_address     = strtoupper($request->pic_address);
                         $customer->limit_credit    = $request->limit_credit;
                         $customer->status_approval = 3;
                         // $customer->top             = $request->top;
@@ -398,7 +398,7 @@ class MitraCustomerController extends Controller
     
                             MitraCustomerDelivery::create([
                                 'mitra_customer_id' => $customer->id,
-                                'address'           => $row['address'],
+                                'address'           => strtoupper($row['address']),
                                 'country_id'        => 103,
                                 'province_id'       => Region::where('code', $row['province_code'])->first()->id,
                                 'city_id'           => Region::where('code', $row['city_code'])->first()->id,
@@ -414,10 +414,10 @@ class MitraCustomerController extends Controller
     
                             MitraCustomerBilling::create([
                                 'mitra_customer_id' => $customer->id,
-                                'name'              => $row['name'],
-                                'notes'             => $row['notes'],
+                                'name'              => strtoupper($row['name']),
+                                'notes'             => strtoupper($row['notes']),
                                 'npwp'              => $row['npwp'],
-                                'address'           => $row['address'],
+                                'address'           => strtoupper($row['address']),
                                 'country_id'        => 103,
                                 'province_id'       => Region::where('code', $row['province_code'])->first()->id,
                                 'city_id'           => Region::where('code', $row['city_code'])->first()->id,
