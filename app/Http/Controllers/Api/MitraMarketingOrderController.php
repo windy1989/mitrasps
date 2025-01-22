@@ -107,17 +107,17 @@ class MitraMarketingOrderController extends Controller
                                 'account_id'             => $customer->id,
                                 'post_date'              => $request->post_date,
                                 'valid_date'             => $request->valid_date,
-                                'document_no'            => $request->document_no,
-                                'branch_code'            => $request->branch_code,
+                                'document_no'            => strtoupper($request->document_no),
+                                'branch_code'            => strtoupper($request->branch_code),
                                 'type_delivery'          => $request->type_delivery,
                                 'delivery_date'          => $request->delivery_date,
-                                'delivery_address'       => $request->delivery_address,
+                                'delivery_address'       => strtoupper($request->delivery_address),
                                 'delivery_province_code' => $request->delivery_province_code,
                                 'delivery_city_code'     => $request->delivery_city_code,
                                 'delivery_district_code' => $request->delivery_district_code,
                                 'payment_type'           => $request->payment_type,
                                 'percent_dp'             => $request->percent_dp ?? NULL,
-                                'note'                   => $request->note,
+                                'note'                   => strtoupper($request->note),
                                 'total'                  => $request->total,
                                 'tax'                    => $request->tax,
                                 'grandtotal'             => $request->grandtotal,
@@ -136,7 +136,7 @@ class MitraMarketingOrderController extends Controller
                                     'total'                    => $row['total'],
                                     'tax'                      => $row['tax'],
                                     'grandtotal'               => $row['grandtotal'],
-                                    'note'                     => $row['note'],
+                                    'note'                     => strtoupper($row['note']),
                                 ]);
                             }
                             
@@ -259,17 +259,17 @@ class MitraMarketingOrderController extends Controller
                             $query->account_id             = $customer->id;
                             $query->post_date              = $request->post_date;
                             $query->valid_date             = $request->valid_date;
-                            $query->document_no            = $request->document_no;
-                            $query->branch_code            = $request->branch_code;
+                            $query->document_no            = strtoupper($request->document_no);
+                            $query->branch_code            = strtoupper($request->branch_code);
                             $query->type_delivery          = $request->type_delivery;
                             $query->delivery_date          = $request->delivery_date;
-                            $query->delivery_address       = $request->delivery_address;
+                            $query->delivery_address       = strtoupper($request->delivery_address);
                             $query->delivery_province_code = $request->delivery_province_code;
                             $query->delivery_city_code     = $request->delivery_city_code;
                             $query->delivery_district_code = $request->delivery_district_code;
                             $query->payment_type           = $request->payment_type;
                             $query->percent_dp             = $request->percent_dp ?? NULL;
-                            $query->note                   = $request->note;
+                            $query->note                   = strtoupper($request->note);
                             $query->total                  = $request->total;
                             $query->tax                    = $request->tax;
                             $query->grandtotal             = $request->grandtotal;
@@ -290,7 +290,7 @@ class MitraMarketingOrderController extends Controller
                                     'total'                    => $row['total'],
                                     'tax'                      => $row['tax'],
                                     'grandtotal'               => $row['grandtotal'],
-                                    'note'                     => $row['note'],
+                                    'note'                     => strtoupper($row['note']),
                                 ]);
                             }
                             
