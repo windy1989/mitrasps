@@ -91,9 +91,9 @@ class MitraMarketingOrderController extends Controller
 
                     foreach($request->details as $key => $row){
                         $item = null;
-                        $item = Item::where('code',$row['item_code'])->where('status','1')->first();
+                        $item = Item::where('code',$row['item_code'])->where('brand_id',$customer->brand_id)->where('status','1')->first();
                         if(!$item){
-                            $errorMessage[] = 'Item dengan kode '.$row['item_code'].' tidak ditemukan.';
+                            $errorMessage[] = 'Item dengan kode '.$row['item_code'].' tidak ditemukan pada broker / user terpilih.';
                         }
                     }
 
