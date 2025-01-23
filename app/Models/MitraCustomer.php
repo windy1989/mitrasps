@@ -48,15 +48,15 @@ class MitraCustomer extends Model{
         return $this->belongsTo('App\Models\Region','district_id','id')->withTrashed();
     }
 
-    public function delivery_address(){
+    public function deliveryAddress(){
         return $this->hasMany('App\Models\MitraCustomerDelivery', 'mitra_customer_id', 'id');
     }
 
-    public function billing_address(){
+    public function billingAddress(){
         return $this->hasMany('App\Models\MitraCustomerBilling', 'mitra_customer_id', 'id');
     }
 
-    public function status_approval(){
+    public function statusApprovalRaw(){
         $status_approval = match ($this->status_approval) {
             '1' => 'Approved',
             '2' => 'Pending Insert',
@@ -67,7 +67,7 @@ class MitraCustomer extends Model{
         return $status_approval;
     }
 
-    public function status(){
+    public function statusRaw(){
         $status = match ($this->status) {
             '1' => 'Active',
             '2' => 'Not Active',

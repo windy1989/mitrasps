@@ -63,7 +63,7 @@ class MitraCustomerController extends Controller
                         'pic_address'      => $row->pic_address,
                         'limit_credit'     => $row->limit_credit,
                         'top'              => $row->top,
-                        'status_approval'  => $row->status_approval(),
+                        'status_approval'  => $row->statusApprovalRaw(),
                         'delivery_address' => $delivery_address==null ? null : ([
                             'address'       => $delivery_address->address,
                             'province_code' => $delivery_address->province->code,
@@ -130,7 +130,7 @@ class MitraCustomerController extends Controller
                     'pic_address'      => $customer->pic_address,
                     'limit_credit'     => $customer->limit_credit,
                     'top'              => $customer->top,
-                    'status_approval'  => $customer->status_approval(),
+                    'status_approval'  => $customer->statusApprovalRaw(),
                     'delivery_address' => $delivery_address==null ? null : ([
                             'address'       => $delivery_address->address,
                             'province_code' => $delivery_address->province->code,
@@ -356,7 +356,7 @@ class MitraCustomerController extends Controller
                     if($customer){
                         $errorMessage = [];
                         if ($customer->status_approval == 2 || $customer->status_approval == 3){
-                            return apiResponse(false, 422, "Status Customer sedang ".$customer->status_approval()." dan belum bisa diupdate lagi", $errorMessage, []); 
+                            return apiResponse(false, 422, "Status Customer sedang ".$customer->statusApprovalRaw()." dan belum bisa diupdate lagi", $errorMessage, []); 
                         }
                         $errorMessage = $this->cek_kode_area([], $request->province_code, $request->city_code, $request->district_code);
                         if(count($errorMessage) > 0) { return apiResponse(false, 422, "Kode area tidak valid", $errorMessage, []); }
@@ -388,8 +388,8 @@ class MitraCustomerController extends Controller
                         // $customer->top_internal    = $top_internal;
                         $customer->save();
 
-                        $customer->delivery_address()->delete();
-                        $customer->billing_address()->delete();
+                        $customer->deliveryAddress()->delete();
+                        $customer->billingAddress()->delete();
 
                         foreach($request->delivery_address as $row){
                             if(!$row['address']) { $errorMessage[] = "Address untuk dokumen penagihan harus diisi"; }
