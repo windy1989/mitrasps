@@ -125,7 +125,7 @@ class MitraMarketingOrderController extends Controller
                                 $qty = round($row['qty'] * $item->sellConversion(),3);
                                 $rowtotal = round($qty * $row['price'],2);
                                 $rowtax = round(($row['percent_tax'] / 100) * $rowtotal,2);
-                                $rowgrandtotal = round($rowtotal + $tax,2);
+                                $rowgrandtotal = round($rowtotal + $rowtax,2);
                                 MitraMarketingOrderDetail::create([
                                     'mitra_marketing_order_id' => $query->id,
                                     'item_id'                  => $item->id,
@@ -297,7 +297,7 @@ class MitraMarketingOrderController extends Controller
                                 $qty = round($row['qty'] * $item->sellConversion(),3);
                                 $rowtotal = round($qty * $row['price'],2);
                                 $rowtax = round(($row['percent_tax'] / 100) * $rowtotal,2);
-                                $rowgrandtotal = round($rowtotal + $tax,2);
+                                $rowgrandtotal = round($rowtotal + $rowtax,2);
                                 MitraMarketingOrderDetail::create([
                                     'mitra_marketing_order_id' => $query->id,
                                     'item_id'                  => $item->id,
