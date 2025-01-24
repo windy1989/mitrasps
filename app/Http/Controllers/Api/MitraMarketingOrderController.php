@@ -81,11 +81,13 @@ class MitraMarketingOrderController extends Controller
                         $errorMessage[] = 'Status pembelian harap diisikan "1" : DP / "2" : Kredit.';
                     }
 
-                    foreach($request->details as $key => $row){
-                        $item = null;
-                        $item = Item::where('code',$row['item_code'])->where('brand_id',$customer->brand_id)->where('status','1')->first();
-                        if(!$item){
-                            $errorMessage[] = 'Item dengan kode '.$row['item_code'].' tidak ditemukan pada broker / user terpilih.';
+                    if($customer){
+                        foreach($request->details as $key => $row){
+                            $item = null;
+                            $item = Item::where('code',$row['item_code'])->where('brand_id',$customer->brand_id)->where('status','1')->first();
+                            if(!$item){
+                                $errorMessage[] = 'Item dengan kode '.$row['item_code'].' tidak ditemukan pada broker / user terpilih.';
+                            }
                         }
                     }
 
@@ -236,9 +238,11 @@ class MitraMarketingOrderController extends Controller
                     
                     if($query){
                         $errorMessage = [];
-                        $customer = User::where('employee_no',$request->customer_code)->where('status','1')->where('type','2')->first();
+                        $customer = User::whereHas('mitraCustomer',function($query)use($request){
+                            $query->where('code',$request->customer_code);
+                        })->where('status','1')->where('type','2')->first();
                         if(!$customer){
-                            $errorMessage[] = 'Customer tidak ditemukan.';
+                            $errorMessage[] = 'Customer tidak ditemukan atau belum diapprove oleh marketing.';
                         }
 
                         if(!in_array($request->type_delivery,['1','2'])){
@@ -249,11 +253,13 @@ class MitraMarketingOrderController extends Controller
                             $errorMessage[] = 'Status pembelian harap diisikan "1" : DP / "2" : Kredit.';
                         }
 
-                        foreach($request->details as $key => $row){
-                            $item = null;
-                            $item = Item::where('code',$row['item_code'])->where('status','1')->first();
-                            if(!$item){
-                                $errorMessage[] = 'Item dengan kode '.$row['item_code'].' tidak ditemukan.';
+                        if($customer){
+                            foreach($request->details as $key => $row){
+                                $item = null;
+                                $item = Item::where('code',$row['item_code'])->where('brand_id',$customer->brand_id)->where('status','1')->first();
+                                if(!$item){
+                                    $errorMessage[] = 'Item dengan kode '.$row['item_code'].' tidak ditemukan.';
+                                }
                             }
                         }
 

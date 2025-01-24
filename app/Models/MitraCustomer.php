@@ -40,6 +40,10 @@ class MitraCustomer extends Model{
         return $this->belongsTo('App\Models\Region','province_id','id')->withTrashed();
     }
 
+    public function user(){
+        return $this->belongsTo('App\Models\User','user_id','id')->withTrashed();
+    }
+
     public function city(){
         return $this->belongsTo('App\Models\Region','city_id','id')->withTrashed();
     }
