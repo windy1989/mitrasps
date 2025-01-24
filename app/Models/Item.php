@@ -202,4 +202,9 @@ class Item extends Model
 
         return $status;
     }
+
+    public function itemUnit()
+    {
+        return $this->hasMany('App\Models\ItemUnit','item_id','id');
+    }
 }
