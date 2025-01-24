@@ -34,9 +34,6 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code' => 'required',
                 'payment_type'           => 'required',
                 'percent_dp'             => $request->payment_type == '1' ? 'required' : '',
-                'total'                  => 'required',
-                'tax'                    => 'required|integer|min:0',
-                'grandtotal'             => 'required',
                 'details'                => 'required|array',
             ], [
                 'document_no.required'            => 'Kode dokumen penghubung tidak boleh kosong.',
@@ -52,11 +49,6 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
                 'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
                 'percent_dp.required'             => 'Prosentase DP tidak boleh kosong.',
-                'total.required'                  => 'Total tidak boleh kosong.',
-                'tax.required'                    => 'Pajak utama tidak boleh kosong.',
-                'tax.integer'                     => 'Pajak utama tidak boleh ada angka dibelakang koma (desimal). Disarankan memakai round-down dari nilai penambahan pajak per detail item.',
-                'tax.min'                         => 'Pajak utama tidak boleh dibawah 0.',
-                'grandtotal.required'             => 'Grandtotal tidak boleh kosong.',
                 'details.required'                => 'Detail item tidak boleh kosong.',
                 'details.array'                   => 'Detail harus dalam bentuk array.',
             ]);
@@ -118,27 +110,44 @@ class MitraMarketingOrderController extends Controller
                                 'payment_type'           => $request->payment_type,
                                 'percent_dp'             => $request->percent_dp ?? NULL,
                                 'note'                   => strtoupper($request->note),
-                                'total'                  => $request->total,
-                                'tax'                    => $request->tax,
-                                'grandtotal'             => $request->grandtotal,
                                 'status'                 => '1',
                             ]);
     
+                            $total = 0;
+                            $tax = 0;
+                            $grandtotal = 0;
                             foreach($request->details as $key => $row){
-                                $item = Item::where('code',$row['item_code'])->where('status','1')->first(); 
+                                $item = Item::where('code',$row['item_code'])->where('status','1')->first();
+                                $pricetax = round(($row['percent_tax'] / 100) * $row['price'],2);
+                                $final_price = $row['price'] + $pricetax;
+                                $qty = round($row['qty'] * $item->sellConversion(),3);
+                                $rowtotal = round($qty * $row['price'],2);
+                                $rowtax = round(($row['percent_tax'] / 100) * $rowtotal,2);
+                                $rowgrandtotal = round($rowtotal + $tax,2);
                                 MitraMarketingOrderDetail::create([
                                     'mitra_marketing_order_id' => $query->id,
                                     'item_id'                  => $item->id,
-                                    'qty'                      => $row['qty'],
+                                    'qty'                      => $qty,
                                     'price'                    => $row['price'],
                                     'percent_tax'              => $row['percent_tax'],
-                                    'final_price'              => $row['final_price'],
-                                    'total'                    => $row['total'],
-                                    'tax'                      => $row['tax'],
-                                    'grandtotal'               => $row['grandtotal'],
+                                    'final_price'              => $final_price,
+                                    'total'                    => $rowtotal,
+                                    'tax'                      => $rowtax,
+                                    'grandtotal'               => $rowgrandtotal,
                                     'note'                     => strtoupper($row['note']),
                                 ]);
+                                $total += $rowtotal;
+                                $tax += $rowtax;
                             }
+
+                            $tax = floor($tax);
+                            $grandtotal = $total + $tax;
+
+                            $query->update([
+                                'total'     => $total,
+                                'tax'       => $tax,
+                                'grandtotal'=> $grandtotal,
+                            ]);
                             
                             $response = [
                                 'status'    => 200,
@@ -195,9 +204,6 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code' => 'required',
                 'payment_type'           => 'required',
                 'percent_dp'             => $request->payment_type == '1' ? 'required' : '',
-                'total'                  => 'required',
-                'tax'                    => 'required',
-                'grandtotal'             => 'required',
                 'details'                => 'required|array',
             ], [
                 'document_no.required'            => 'Kode dokumen penghubung tidak boleh kosong.',
@@ -213,9 +219,6 @@ class MitraMarketingOrderController extends Controller
                 'delivery_district_code.required' => 'Kecamatan pengiriman tidak boleh kosong.',
                 'payment_type.required'           => 'Tipe pembayaran tidak boleh kosong. 1 : DP, 2 : Kredit.',
                 'percent_dp.required'             => 'Prosentase DP tidak boleh kosong.',
-                'total.required'                  => 'Total tidak boleh kosong.',
-                'tax.required'                    => 'Pajak tidak boleh kosong.',
-                'grandtotal.required'             => 'Grandtotal tidak boleh kosong.',
                 'details.required'                => 'Detail item tidak boleh kosong.',
                 'details.array'                   => 'Detail harus dalam bentuk array.',
             ]);
@@ -278,21 +281,41 @@ class MitraMarketingOrderController extends Controller
     
                             $query->mitraMarketingOrderDetail()->delete();
 
+                            $total = 0;
+                            $tax = 0;
+                            $grandtotal = 0;
                             foreach($request->details as $key => $row){
-                                $item = Item::where('code',$row['item_code'])->where('status','1')->first(); 
+                                $item = Item::where('code',$row['item_code'])->where('status','1')->first();
+                                $pricetax = round(($row['percent_tax'] / 100) * $row['price'],2);
+                                $final_price = $row['price'] + $pricetax;
+                                $qty = round($row['qty'] * $item->sellConversion(),3);
+                                $rowtotal = round($qty * $row['price'],2);
+                                $rowtax = round(($row['percent_tax'] / 100) * $rowtotal,2);
+                                $rowgrandtotal = round($rowtotal + $tax,2);
                                 MitraMarketingOrderDetail::create([
                                     'mitra_marketing_order_id' => $query->id,
                                     'item_id'                  => $item->id,
-                                    'qty'                      => $row['qty'],
+                                    'qty'                      => $qty,
                                     'price'                    => $row['price'],
                                     'percent_tax'              => $row['percent_tax'],
-                                    'final_price'              => $row['final_price'],
-                                    'total'                    => $row['total'],
-                                    'tax'                      => $row['tax'],
-                                    'grandtotal'               => $row['grandtotal'],
+                                    'final_price'              => $final_price,
+                                    'total'                    => $rowtotal,
+                                    'tax'                      => $rowtax,
+                                    'grandtotal'               => $rowgrandtotal,
                                     'note'                     => strtoupper($row['note']),
                                 ]);
+                                $total += $rowtotal;
+                                $tax += $rowtax;
                             }
+
+                            $tax = floor($tax);
+                            $grandtotal = $total + $tax;
+
+                            MitraMarketingOrder::find($query->id)->update([
+                                'total'     => $total,
+                                'tax'       => $tax,
+                                'grandtotal'=> $grandtotal,
+                            ]);
                             
                             $response = [
                                 'status'    => 200,
