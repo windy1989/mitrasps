@@ -120,18 +120,18 @@ class MitraMarketingOrderController extends Controller
                             $grandtotal = 0;
                             foreach($request->details as $key => $row){
                                 $item = Item::where('code',$row['item_code'])->where('status','1')->first();
-                                $pricetax = round(($row['percent_tax'] / 100) * $row['price'],2);
+                                $pricetax = round((11 / 100) * $row['price'],2);
                                 $final_price = $row['price'] + $pricetax;
                                 $qty = round($row['qty'] * $item->sellConversion(),3);
                                 $rowtotal = round($qty * $row['price'],2);
-                                $rowtax = round(($row['percent_tax'] / 100) * $rowtotal,2);
+                                $rowtax = round((11 / 100) * $rowtotal,2);
                                 $rowgrandtotal = round($rowtotal + $rowtax,2);
                                 MitraMarketingOrderDetail::create([
                                     'mitra_marketing_order_id' => $query->id,
                                     'item_id'                  => $item->id,
                                     'qty'                      => $qty,
                                     'price'                    => $row['price'],
-                                    'percent_tax'              => $row['percent_tax'],
+                                    'percent_tax'              => 11,
                                     'final_price'              => $final_price,
                                     'total'                    => $rowtotal,
                                     'tax'                      => $rowtax,
