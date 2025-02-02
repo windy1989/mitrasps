@@ -278,4 +278,43 @@ class RegionController extends Controller
             return apiResponse(false, 401, 'Token tidak valid', null, []);
         }
     }
+
+    //get district by name
+    public function getDistrictByName(Request $request, $name){
+        $cek = User::where('api_token',$request->bearerToken())->first();
+        if($cek && $request->bearerToken()){
+            //path param
+            // $name = base64_decode($name);
+            $name = strtoupper($name);
+            
+            //query param
+            $offset = $request->query('offset', 0);
+            $limit  = $request->query('limit', 20);
+            
+            $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('name', "LIKE","%{$name}%")
+                    ->offset($offset)->limit($limit)->get();
+            if($districts){
+                foreach($districts as $row){
+                    $temp_province = Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code",substr($row->code,0,2))->first();
+                    $temp_city     = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code",substr($row->code,0,5))->first();
+                    $data[] = [
+                        'district_code' => $row->code,
+                        'district_name' => $row->name,
+                        'city_code'     => $temp_city->code,
+                        'city_name'     => $temp_city->name,
+                        'province_code' => $temp_province->code,
+                        'province_name' => $temp_province->name,
+                    ];
+                }
+
+                return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, []);
+            }
+            else{
+                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', [], []);
+            }
+        }
+        else{
+            return apiResponse(false, 401, 'Token tidak valid', null, []);
+        }
+    }
 }

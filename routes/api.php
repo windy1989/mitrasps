@@ -42,6 +42,7 @@ Route::prefix('district')->group(function (){
     Route::get('/', [RegionController::class, 'getAllDistricts']);
     Route::get('/filterCity/{cityCode}', [RegionController::class, 'getDistrictByCity']);
     Route::get('/{code}', [RegionController::class, 'getDistrict']);
+    Route::get('/byName/{districtName?}', [RegionController::class, 'getDistrictByName']);
 });
 
 Route::prefix('customer')->group(function (){

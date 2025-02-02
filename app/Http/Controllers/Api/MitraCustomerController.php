@@ -180,7 +180,7 @@ class MitraCustomerController extends Controller
                 'province_code'    => 'required',
                 'city_code'        => 'required',
                 'district_code'    => 'required',
-                'id_card'         => 'required',
+                'id_card'          => 'required',
                 'pic_name'         => 'required',
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
