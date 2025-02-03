@@ -285,7 +285,7 @@ class RegionController extends Controller
         if($cek && $request->bearerToken()){
             //path param
             // $name = base64_decode($name);
-            $name = strtoupper($name);
+            $name = strtoupper(base64_decode($name));
             
             //query param
             $offset = $request->query('offset', 0);
@@ -307,7 +307,7 @@ class RegionController extends Controller
                     ];
                 }
 
-                return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, []);
+                return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
                 return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', [], []);
