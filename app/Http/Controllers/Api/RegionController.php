@@ -293,7 +293,7 @@ class RegionController extends Controller
             
             $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('name', "LIKE","%{$name}%")
                     ->offset($offset)->limit($limit)->get();
-            if($districts){
+            if(count($districts)>0){
                 foreach($districts as $row){
                     $temp_province = Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code",substr($row->code,0,2))->first();
                     $temp_city     = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code",substr($row->code,0,5))->first();
