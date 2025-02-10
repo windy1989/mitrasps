@@ -19,13 +19,18 @@ class RegionController extends Controller
 {
     public function index(){
         $regions = Region::all();
-        foreach($regions as $row){
-            $data[] = [
-                'code' => $row->code,
-                'name' => $row->name,
-            ];
+        if($regions->isNotEmpty()){
+            foreach($regions as $row){
+                $data[] = [
+                    'code' => $row->code,
+                    'name' => $row->name,
+                ];
+            }
+            return apiResponse(true, 200, 'Data area ditampilkan', $data, []);
         }
-        return apiResponse(true, 200, 'Data area ditampilkan', $data, []);
+        else{
+            return apiResponse(true, 200, 'Data area tidak ditemukan', null, []);
+        }
     }
 
     public function getAreaBulk(Request $request, $provinceCode='', $cityCode=''){
@@ -72,7 +77,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data area ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data area tidak ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data area tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -84,18 +89,17 @@ class RegionController extends Controller
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
             $provinces = Region::whereRaw("CHAR_LENGTH(code) = 2")->get();
-            foreach($provinces as $row){
-                $data[] = [
-                    'code' => $row->code,
-                    'name' => $row->name,
-                ];
-            }
-
-            if($data){
+            if($provinces->isNotEmpty()){
+                foreach($provinces as $row){
+                    $data[] = [
+                        'code' => $row->code,
+                        'name' => $row->name,
+                    ];
+                }
                 return apiResponse(true, 200, 'Data provinsi ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data provinsi tidak ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data provinsi tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -118,7 +122,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data provinsi ditampilkan', $data, []);
             }
             else{
-                return apiResponse(true, 200, 'Data provinsi tidak ditemukan', [], []);
+                return apiResponse(true, 200, 'Data provinsi tidak ditemukan', null, []);
             }
         }
         else{
@@ -131,17 +135,17 @@ class RegionController extends Controller
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
             $cities = Region::whereRaw("CHAR_LENGTH(code) = 5")->get();
-            foreach($cities as $row){
-                $data[] = [
-                    'code' => $row->code,
-                    'name' => $row->name,
-                ];
-            }
-            if($data){
+            if($cities->isNotEmpty()){
+                foreach($cities as $row){
+                    $data[] = [
+                        'code' => $row->code,
+                        'name' => $row->name,
+                    ];
+                }
                 return apiResponse(true, 200, 'Data kota ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kota tidak ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data kota tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -160,18 +164,17 @@ class RegionController extends Controller
             }
 
             $cities = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code","LIKE","{$parentCode}%")->get();
-            foreach($cities as $row){
-                $data[] = [
-                    'code' => $row->code,
-                    'name' => $row->name,
-                ];
-            }
-
-            if($data){
+            if($cities->isNotEmpty()){
+                foreach($cities as $row){
+                    $data[] = [
+                        'code' => $row->code,
+                        'name' => $row->name,
+                    ];
+                }
                 return apiResponse(true, 200, 'Data kota ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kota tidak ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data kota tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -207,18 +210,17 @@ class RegionController extends Controller
         $cek = User::where('api_token',$request->bearerToken())->first();
         if($cek && $request->bearerToken()){
             $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->get();
-            foreach($districts as $row){
-                $data[] = [
-                    'code' => $row->code,
-                    'name' => $row->name,
-                ];
-            }
-
-            if($data){
+            if($districts->isNotEmpty()){
+                foreach($districts as $row){
+                    $data[] = [
+                        'code' => $row->code,
+                        'name' => $row->name,
+                    ];
+                }
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -237,18 +239,17 @@ class RegionController extends Controller
             }
 
             $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('code','LIKE',"{$parentCode}%")->get();
-            foreach($districts as $row){
-                $data[] = [
-                    'code' => $row->code,
-                    'name' => $row->name,
-                ];
-            }
-        
-            if($data){
+            if($districts->isNotEmpty()){
+                foreach($districts as $row){
+                    $data[] = [
+                        'code' => $row->code,
+                        'name' => $row->name,
+                    ];
+                }
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -271,7 +272,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, []);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', [], []);
+                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
             }
         }
         else{
@@ -293,7 +294,7 @@ class RegionController extends Controller
             
             $districts = Region::whereRaw("CHAR_LENGTH(code) = 8")->where('name', "LIKE","%{$name}%")
                     ->offset($offset)->limit($limit)->get();
-            if(count($districts)>0){
+            if($districts->isNotEmpty()){
                 foreach($districts as $row){
                     $temp_province = Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code",substr($row->code,0,2))->first();
                     $temp_city     = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code",substr($row->code,0,5))->first();
@@ -306,11 +307,10 @@ class RegionController extends Controller
                         'province_name' => $temp_province->name,
                     ];
                 }
-
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', [], []);
+                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
             }
         }
         else{
