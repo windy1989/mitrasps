@@ -30,6 +30,7 @@ class MitraCustomer extends Model{
         'limit_credit',
         'top',
         'top_internal',
+        'payment_account',
         'status_approval',  // Status Approval: 1 Approved, 2 Pending Create, 3 Pending Update, 4 Rejected
         'user_id',          // link ID BP di table user (employee_no)
         'mitra_id',         // ID Broker (employee_no) dari table user

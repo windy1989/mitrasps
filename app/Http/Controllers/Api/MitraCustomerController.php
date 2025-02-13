@@ -63,6 +63,7 @@ class MitraCustomerController extends Controller
                         'pic_address'      => $row->pic_address,
                         'limit_credit'     => $row->limit_credit,
                         'top'              => $row->top,
+                        'payment_account'  => $row->payment_account,
                         'status_approval'  => $row->statusApprovalRaw(),
                         'delivery_address' => $delivery_address==null ? null : ([
                             'address'       => $delivery_address->address,
@@ -130,6 +131,7 @@ class MitraCustomerController extends Controller
                     'pic_address'      => $customer->pic_address,
                     'limit_credit'     => $customer->limit_credit,
                     'top'              => $customer->top,
+                    'payment_account'  => $customer->payment_account,
                     'status_approval'  => $customer->statusApprovalRaw(),
                     'delivery_address' => $delivery_address==null ? null : ([
                             'address'       => $delivery_address->address,
@@ -185,6 +187,7 @@ class MitraCustomerController extends Controller
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
                 // 'top'              => 'required',
+                'payment_account'  => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -204,6 +207,7 @@ class MitraCustomerController extends Controller
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
                 // 'top.required'              => 'TOP tidak boleh kosong.',
+                'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
             ]);
@@ -246,6 +250,7 @@ class MitraCustomerController extends Controller
                         'limit_credit'    => $request->limit_credit,
                         'top'             => 90, //$request->top,
                         'top_internal'    => 90, //$top_internal,
+                        'payment_account' => $request->payment_account,
                         'status_approval' => 2,
                         'mitra_id'        => $cek->id,
                         'status'          => 2,
@@ -322,6 +327,7 @@ class MitraCustomerController extends Controller
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
                 // 'top'              => 'required',
+                'payment_account'  => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -341,6 +347,7 @@ class MitraCustomerController extends Controller
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
                 // 'top.required'              => 'TOP tidak boleh kosong.',
+                'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
                 'npwp.required'             => 'NPWP tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
@@ -383,6 +390,7 @@ class MitraCustomerController extends Controller
                         $customer->pic_name        = strtoupper($request->pic_name);
                         $customer->pic_address     = strtoupper($request->pic_address);
                         $customer->limit_credit    = $request->limit_credit;
+                        $customer->payment_account = $request->payment_account;
                         $customer->status_approval = 3;
                         // $customer->top             = $request->top;
                         // $customer->top_internal    = $top_internal;
