@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\Menu;
+use App\Models\MitraCustomer;
 use App\Models\MitraMarketingOrderDetail;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -66,9 +67,12 @@ class MitraMarketingOrderController extends Controller
                     $newCode = MitraMarketingOrder::generateCode($menu->document_code.date('y',strtotime($request->post_date)).'00');
                     
                     $errorMessage = [];
-                    $customer = User::whereHas('mitraCustomer',function($query)use($request){
+                    /* $customer = User::whereHas('mitraCustomer',function($query)use($request){
                         $query->where('code',$request->customer_code);
-                    })->where('status','1')->where('type','2')->first();
+                    })->where('status','1')->where('type','2')->first(); */
+                    $customer = MitraCustomer::where('code',$request->customer_code)->whereHas('user',function($query){
+                        $query->where('status','1')->where('type','2');
+                    })->where('status_approval','1')->where('status','1')->whereNotNull('user_id')->first();
                     if(!$customer){
                         $errorMessage[] = 'Customer tidak ditemukan atau belum diapprove oleh marketing.';
                     }
@@ -98,7 +102,7 @@ class MitraMarketingOrderController extends Controller
                             $query = MitraMarketingOrder::create([
                                 'code'                   => $newCode,
                                 'user_id'                => $cek->id,
-                                'account_id'             => $customer->id,
+                                'account_id'             => $customer->user_id,
                                 'post_date'              => $request->post_date,
                                 'valid_date'             => $request->valid_date,
                                 'document_no'            => strtoupper($request->document_no),
