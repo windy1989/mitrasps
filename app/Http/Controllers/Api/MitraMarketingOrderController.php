@@ -70,9 +70,7 @@ class MitraMarketingOrderController extends Controller
                     /* $customer = User::whereHas('mitraCustomer',function($query)use($request){
                         $query->where('code',$request->customer_code);
                     })->where('status','1')->where('type','2')->first(); */
-                    $customer = MitraCustomer::where('code',$request->customer_code)->whereHas('user',function($query){
-                        $query->where('status','1')->where('type','2');
-                    })->where('status_approval','1')->where('status','1')->whereNotNull('user_id')->first();
+                    $customer = MitraCustomer::where('code',$request->customer_code)->where('status_approval','1')->where('status','1')->whereNotNull('user_id')->first();
                     if(!$customer){
                         $errorMessage[] = 'Customer tidak ditemukan atau belum diapprove oleh marketing.';
                     }
