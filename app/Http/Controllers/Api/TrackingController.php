@@ -19,8 +19,7 @@ class TrackingController extends Controller
     {
         $cek = User::where('api_token', $request->bearerToken())->first();
 
-
-        if ($cek) {
+        if($cek && $request->bearerToken()) {
             $tracking = [];
 
             $mitramocode = $request->code;

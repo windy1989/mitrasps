@@ -22,8 +22,12 @@ class StockController extends Controller
     {
         $cek = User::where('api_token', $request->bearerToken())->first();
 
-        if ($cek) {
+        if($cek && $request->bearerToken()) {
             $brand_id = $cek->brand_id;
+            if($brand_id == null || $brand_id == ''){
+                return apiResponse(false, 422, "Data tidak ditemukan", null, []);
+            }
+
             $query = DB::select("
             SELECT a.kode,a.name,a.shading, a.initial as stock FROM (
         SELECT kode,a.name,a.shading, SUM(qty) AS initial FROM (
@@ -115,9 +119,17 @@ class StockController extends Controller
     {
         $cek = User::where('api_token', $request->bearerToken())->first();
 
-        if ($cek) {
+        if($cek && $request->bearerToken()){
             $brand_id = $cek->brand_id;
+            if($brand_id == null || $brand_id == ''){
+                return apiResponse(false, 400, "Data mitra tidak ditemukan", null, []);
+            }
+
             $code = $request->code;
+            if($code == null || $code == ''){
+                return apiResponse(false, 400, "Kode item harus dikirim", null, []);
+            }
+
             $query = DB::select("
             SELECT a.kode,a.name,a.shading, a.initial as stock FROM (
         SELECT kode,a.name,a.shading, SUM(qty) AS initial FROM (

@@ -19,11 +19,11 @@ Route::prefix('mitra_marketing_order')->group(function () {
 });
 Route::prefix('item_stock')->group(function () {
     Route::post('/get_data_all', [StockController::class, 'getDataAll']);
-    Route::get('/get_data', [StockController::class, 'getData']);
+    Route::post('/get_data', [StockController::class, 'getData']);
 });
 
 Route::prefix('tracking')->group(function () {
-    Route::get('/get_data', [TrackingController::class, 'getData']);
+    Route::post('/get_data', [TrackingController::class, 'getData']);
 });
 
 
