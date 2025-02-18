@@ -38,9 +38,9 @@ class TrackingController extends Controller
             if ($querymitramarketingorder) {
                 foreach ($querymitramarketingorder as $row) {
                     $tracking[] = [
-                        'name' => 'Mitra Marketing Order',
-                        'code' => $mitramocode,
-                        'date' => $row->created_at
+                        'document' => 'Sales Order Mitra',
+                        'code'     => $mitramocode,
+                        'date'     => $row->created_at,
                     ];
                 }
             }
@@ -55,9 +55,9 @@ class TrackingController extends Controller
             if ($querymitraso) {
                 foreach ($querymitraso as $row) {
                     $tracking[] = [
-                        'name' => 'Sales Order',
-                        'code' => $querymitraso['code'],
-                        'date' => $querymitraso['created_at']
+                        'document' => 'Sales Order',
+                        'code'     => $row->code,
+                        'date'     => $row->created_at,
                     ];
                 }
             }
@@ -69,13 +69,13 @@ class TrackingController extends Controller
                 left join marketing_orders d on d.id=c.marketing_order_id and d.deleted_at is null and d.void_date is null
                 where d.document_no='" . $mitramocode . "' and a.void_date is null and a.deleted_at is null
             ");
-
+            
             if ($querymitramod) {
                 foreach ($querymitramod as $row) {
                     $tracking[] = [
-                        'name' => 'MOD',
-                        'code' => $querymitramod['code'],
-                        'date' => $querymitramod['created_at']
+                        'document' => 'Jadwal Pengiriman',
+                        'code'     => $row->code,
+                        'date'     => $row->created_at,
                     ];
                 }
             }
@@ -93,11 +93,11 @@ class TrackingController extends Controller
 
             if ($querymitrasj) {
                 foreach ($querymitrasj as $row) {
-                    $mitrasj = $querymitrasj['id'];
+                    $mitrasj = $row->id;
                     $tracking[] = [
-                        'name' => 'Surat Jalan',
-                        'code' => $querymitrasj['code'],
-                        'date' => $querymitrasj['created_at']
+                        'document' => 'Surat Jalan',
+                        'code'     => $row->code,
+                        'date'     => $row->created_at,
                     ];
                 }
             }
@@ -111,31 +111,17 @@ class TrackingController extends Controller
             if ($querymitrasatpam) {
                 foreach ($querymitrasatpam as $row) {
                     $tracking[] = [
-                        'name' => 'Keluar Pabrik',
-                        'code' => $mitrasj,
-                        'date' => $querymitrasatpam['created_at']
+                        'status' => 'Keluar Pabrik',
+                        'date'   => $row->created_at,
                     ];
                 }
             }
 
-
             $tracking = json_decode(json_encode($tracking));
-
-            $data = [];
             if ($tracking) {
-            
-                foreach ($tracking as $row) {
-                    $data[] = [
-                        'status'          => $row->name,
-                        'code'          => $row->code,
-                        'date'           => $row->date,
-
-                    ];
-                }
-
-                return apiResponse(true, 200, 'Data dokumen ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data dokumen ditemukan', $tracking, []);
             } else {
-                return apiResponse(false, 404, 'Data dokumen tidak ditemukan', $data, []);
+                return apiResponse(false, 404, 'Data dokumen tidak ditemukan', null, []);
             }
         } else {
             return apiResponse(false, 401, 'Token tidak valid', null, []);
