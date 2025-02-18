@@ -187,7 +187,7 @@ class MitraCustomerController extends Controller
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
                 // 'top'              => 'required',
-                // 'payment_account'  => 'required', //diremark nunggu update TT
+                'payment_account'  => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -207,7 +207,7 @@ class MitraCustomerController extends Controller
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
                 // 'top.required'              => 'TOP tidak boleh kosong.',
-                // 'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
+                'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
             ]);
@@ -327,7 +327,7 @@ class MitraCustomerController extends Controller
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
                 // 'top'              => 'required',
-                // 'payment_account'  => 'required', //diremark nunggu update TT
+                'payment_account'  => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -347,7 +347,7 @@ class MitraCustomerController extends Controller
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
                 // 'top.required'              => 'TOP tidak boleh kosong.',
-                // 'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
+                'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
                 'npwp.required'             => 'NPWP tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
