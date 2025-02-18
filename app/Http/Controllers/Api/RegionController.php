@@ -29,7 +29,7 @@ class RegionController extends Controller
             return apiResponse(true, 200, 'Data area ditampilkan', $data, []);
         }
         else{
-            return apiResponse(true, 200, 'Data area tidak ditemukan', null, []);
+            return apiResponse(false, 404, 'Data area tidak ditemukan', null, []);
         }
     }
 
@@ -45,11 +45,11 @@ class RegionController extends Controller
             $limit  = $request->query('limit', 100);
 
             if($provinceCode && Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code","LIKE","{$provinceCode}")->count() < 1){
-                return apiResponse(false, 400, 'Kode Provinsi tidak valid ', [], []);
+                return apiResponse(false, 422, 'Kode Provinsi tidak valid ', [], []);
             }
 
             if($cityCode && Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code","LIKE","{$cityCode}")->count() < 1){
-                return apiResponse(false, 400, 'Kode Kota tidak valid ', [], []);
+                return apiResponse(false, 422, 'Kode Kota tidak valid ', [], []);
             }
 
             $provinces = Region::whereRaw("CHAR_LENGTH(code) = 2")->where("code","LIKE","{$provinceCode}%")->get();
@@ -77,7 +77,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data area ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data area tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data area tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -99,7 +99,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data provinsi ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data provinsi tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data provinsi tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -122,7 +122,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data provinsi ditampilkan', $data, []);
             }
             else{
-                return apiResponse(true, 200, 'Data provinsi tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data provinsi tidak ditemukan', null, []);
             }
         }
         else{
@@ -145,7 +145,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kota ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kota tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data kota tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -160,7 +160,7 @@ class RegionController extends Controller
             $parentCode = base64_decode($parentCode);
 
             if(strlen($parentCode) != 2){
-                return apiResponse(false, 400, 'Kode provinsi tidak valid, cek daftar provinsi', null, []);
+                return apiResponse(false, 422, 'Kode provinsi tidak valid, cek daftar provinsi', null, []);
             }
 
             $cities = Region::whereRaw("CHAR_LENGTH(code) = 5")->where("code","LIKE","{$parentCode}%")->get();
@@ -174,7 +174,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kota ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kota tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data kota tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -197,7 +197,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kota ditampilkan', $data, []);
             }
             else{
-                return apiResponse(true, 200, 'Data kota tidak ditemukan', [], []);
+                return apiResponse(false, 404, 'Data kota tidak ditemukan', [], []);
             }
         }
         else{
@@ -220,7 +220,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data kecamatan tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -249,7 +249,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data kecamatan tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -272,7 +272,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, []);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data kecamatan tidak ditemukan', null, []);
             }
         }
         else{
@@ -310,7 +310,7 @@ class RegionController extends Controller
                 return apiResponse(true, 200, 'Data kecamatan ditampilkan', $data, ['total_data' => count($data)]);
             }
             else{
-                return apiResponse(true, 200, 'Data kecamatan tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data kecamatan tidak ditemukan', null, []);
             }
         }
         else{

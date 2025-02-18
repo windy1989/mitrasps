@@ -93,7 +93,7 @@ class MitraCustomerController extends Controller
                 }
                 return apiResponse(true, 200, 'Data customer ditampilkan', $data, []);
             }else{
-                return apiResponse(true, 200, 'Data customer tidak ditemukan', [], []);
+                return apiResponse(false, 404, 'Data customer tidak ditemukan', [], []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -161,7 +161,7 @@ class MitraCustomerController extends Controller
             
                 return apiResponse(true, 200, 'Data customer ditampilkan', $data, []);
             }else{
-                return apiResponse(true, 200, 'Data customer tidak ditemukan', null, []);
+                return apiResponse(false, 404, 'Data customer tidak ditemukan', null, []);
             }
         }else{
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -224,7 +224,7 @@ class MitraCustomerController extends Controller
 
                     $cek_kode_customer = MitraCustomer::where('mitra_id', $cek->id)->where('code', $request->code)->first();
                     if($cek_kode_customer){
-                        return apiResponse(false, 422, "Customer sudah ada.", null, []);
+                        return apiResponse(false, 422, "Kode Customer sudah ada.", null, []);
                     }
 
                     //Area JABODETABEKSER 56 hari -> internal 66.
@@ -297,7 +297,7 @@ class MitraCustomerController extends Controller
                     DB::rollback();
                     $message = $e->getMessage();
                     info($message);
-                    return apiResponse(false, 401, "Data gagal disimpan" , $message, []);
+                    return apiResponse(false, 400, "Data gagal disimpan" , $message, []);
                 }
             }
         }else{
@@ -443,7 +443,7 @@ class MitraCustomerController extends Controller
                     DB::rollback();
                     $message = $e->getMessage();
                     info($message);
-                    return apiResponse(false, 401, "Data gagal disimpan" , $message, []);
+                    return apiResponse(false, 422, "Data gagal disimpan" , $message, []);
                 }
             }
         }else{
