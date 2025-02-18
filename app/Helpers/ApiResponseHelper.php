@@ -4,9 +4,10 @@ if(!function_exists('apiResponse')){
     /*
         200 OK - Request succeeded.
         201 Created - Resource successfully created.
-        400 Bad Request - Invalid input or parameters.
-        401 Unauthorized - Authentication failure.
-        404 Not Found - Resource not found.
+        400 Bad Request - Invalid input or parameters. Missing Parameter.
+        401 Unauthorized - Authentication failure. Token not valid.
+        404 Not Found - Resource not found. Missing URL, No Record in Database.
+        422 Unprocessable Entity. Request is valid but fails validation.
         500 Internal Server Error - Server-side issue.
     */
 

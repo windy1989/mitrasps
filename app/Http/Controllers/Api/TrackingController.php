@@ -133,9 +133,9 @@ class TrackingController extends Controller
                     ];
                 }
 
-                return apiResponse(true, 200, 'Data ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data dokumen ditemukan', $data, []);
             } else {
-                return apiResponse(true, 200, 'Data Tidak ditemukan', $data, []);
+                return apiResponse(false, 404, 'Data dokumen tidak ditemukan', $data, []);
             }
         } else {
             return apiResponse(false, 401, 'Token tidak valid', null, []);

@@ -25,7 +25,7 @@ class StockController extends Controller
         if($cek && $request->bearerToken()) {
             $brand_id = $cek->brand_id;
             if($brand_id == null || $brand_id == ''){
-                return apiResponse(false, 422, "Data tidak ditemukan", null, []);
+                return apiResponse(false, 400, "Data mitra tidak ditemukan", null, []);
             }
 
             $query = DB::select("
@@ -103,9 +103,9 @@ class StockController extends Controller
                     ];
                 }
 
-                return apiResponse(true, 200, 'Data Ditemukan', $data, []);
+                return apiResponse(true, 200, 'Data item ditemukan', $data, []);
             } else {
-                return apiResponse(true, 200, 'Data tidak ditemukan', '', []);
+                return apiResponse(false, 404, 'Data item tidak ditemukan', '', []);
             }
         } else {
             return apiResponse(false, 401, 'Token tidak valid', null, []);
@@ -202,21 +202,12 @@ class StockController extends Controller
                 }
 
 
-                $response = [
-                    'status'    => 200,
-                    'data'      => $data,
-                ];
+                return apiResponse(true, 200, 'Data item ditemukan', $data, []);
             } else {
-                $response = [
-                    'status'    => 401,
-                    'message'   => 'Data tidak ditemukan.'
-                ];
+                return apiResponse(false, 404, 'Data item tidak ditemukan', '', []);
             }
         } else {
-            $response = [
-                'status'    => 401,
-                'message'   => 'Token tidak ditemukan'
-            ];
+            return apiResponse(false, 401, 'Token tidak ditemukan', '', []);
         }
     }
 }
