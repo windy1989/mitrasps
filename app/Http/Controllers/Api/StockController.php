@@ -19,16 +19,20 @@ use Illuminate\Validation\Rule;
 class StockController extends Controller
 {
 
-    public function getDataAll(Request $request){
+    public function getDataAll(Request $request)
+    {
         $cek = User::where('api_token', $request->bearerToken())->first();
 
-        if($cek && $request->bearerToken()) {
+        if ($cek && $request->bearerToken()) {
             $brand_id = $cek->brand_id;
-            if($brand_id == null || $brand_id == ''){
+            if ($brand_id == null || $brand_id == '') {
                 return apiResponse(false, 400, "Data mitra tidak ditemukan", null, []);
             }
 
+
+
             $query = DB::select("
+            SELECT a.kode,a.name,a.shading,a.stock/conversion AS stock FROM (
             SELECT a.kode,a.name,a.shading, a.initial as stock FROM (
                 SELECT kode,a.name,a.shading, SUM(qty) AS initial FROM (
                     SELECT  d.code AS kode,d.name,k.code AS shading, coalesce(SUM(b.qty*c.conversion),0) AS Qty
@@ -87,7 +91,9 @@ class StockController extends Controller
                         GROUP BY c.code,c.name,k.code
                 )a 
                 GROUP BY kode,NAME,shading
-            )a
+            )a)a  left join items b ON b.code=a.kode
+            left join item_units c on b.id=c.item_id and c.deleted_at is null
+            left join units d on d.id=c.unit_id
             ");
 
             if ($query) {
@@ -99,7 +105,7 @@ class StockController extends Controller
                         'name'    => $row->name,
                         'shading' => $row->shading,
                         'qty'     => round($row->stock, 2),
-                        'uom'     => 'M2'
+                        'uom'     => 'PALET'
                     ];
                 }
 
@@ -112,19 +118,35 @@ class StockController extends Controller
         }
     }
 
-    public function getData(Request $request){
+    public function getData(Request $request)
+    {
         $cek = User::where('api_token', $request->bearerToken())->first();
 
-        if($cek && $request->bearerToken()){
+        if ($cek && $request->bearerToken()) {
             $brand_id = $cek->brand_id;
-            if($brand_id == null || $brand_id == ''){
+            if ($brand_id == null || $brand_id == '') {
                 return apiResponse(false, 400, "Data mitra tidak ditemukan", null, []);
             }
 
             $code = $request->code;
-            if($code == null || $code == ''){
+            if ($code == null || $code == '') {
                 return apiResponse(false, 400, "Kode item harus dikirim", null, []);
             }
+
+            $queryPalet = DB::select("SELECT b.conversion from items a 
+            left join item_units b on a.id=b.item_id and b.deleted_at is null
+            left join units c on c.id=b.unit_id
+            where a.code='" . $code . "' and a.brand_id='" . $brand_id . "'");
+
+            if ($queryPalet) {
+                $konversi = 0.00;
+
+                foreach ($queryPalet as $row) {
+                    $konversi =
+                        $row->conversion;
+                }
+            }
+
 
             $query = DB::select("
             SELECT a.kode,a.name,a.shading, a.initial as stock FROM (
@@ -196,8 +218,8 @@ class StockController extends Controller
                         'code'    => $row->kode,
                         'name'    => $row->name,
                         'shading' => $row->shading,
-                        'qty'     => round($row->stock, 2),
-                        'uom'     => 'M2'
+                        'qty'     => round($row->stock, 2) / $konversi,
+                        'uom'     => 'PALET'
                     ];
                 }
 
