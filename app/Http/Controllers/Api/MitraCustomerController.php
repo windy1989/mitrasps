@@ -186,8 +186,8 @@ class MitraCustomerController extends Controller
                 'pic_name'         => 'required',
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
-                // 'top'              => 'required',
-                // 'payment_account'  => 'required', //diremark nunggu update TT
+                'top'              => 'required',
+                'payment_account'  => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -206,8 +206,8 @@ class MitraCustomerController extends Controller
                 'pic_name.required'         => 'Nama PIC tidak boleh kosong.',
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
-                // 'top.required'              => 'TOP tidak boleh kosong.',
-                // 'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
+                'top.required'              => 'TOP tidak boleh kosong.',
+                'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
             ]);
@@ -248,7 +248,7 @@ class MitraCustomerController extends Controller
                         'pic_name'        => strtoupper($request->pic_name),
                         'pic_address'     => strtoupper($request->pic_address),
                         'limit_credit'    => $request->limit_credit,
-                        'top'             => 90, //$request->top,
+                        'top'             => $request->top,
                         'top_internal'    => 90, //$top_internal,
                         'payment_account' => $request->payment_account,
                         'status_approval' => 2,
@@ -322,12 +322,12 @@ class MitraCustomerController extends Controller
                 'province_code'    => 'required',
                 'city_code'        => 'required',
                 'district_code'    => 'required',
-                // 'id_card'         => 'required',
+                'id_card'         => 'required',
                 'pic_name'         => 'required',
                 'pic_address'      => 'required',
                 'limit_credit'     => 'required',
-                // 'top'              => 'required',
-                // 'payment_account'  => 'required', //diremark nunggu update TT
+                'top'              => 'required',
+                'payment_account'  => 'required',
                 'delivery_address' => 'required',
                 'billing_address'  => 'required',
             ], [
@@ -342,12 +342,12 @@ class MitraCustomerController extends Controller
                 'province_code.required'    => 'province_code tidak boleh kosong.',
                 'city_code.required'        => 'city_code tidak boleh kosong.',
                 'district_code.required'    => 'district_code tidak boleh kosong.',
-                // 'id_card.required'          => 'No. KTP tidak boleh kosong.',
+                'id_card.required'          => 'No. KTP tidak boleh kosong.',
                 'pic_name.required'         => 'Nama PIC tidak boleh kosong.',
                 'pic_address.required'      => 'Alamat PIC tidak boleh kosong.',
                 'creditlimit.required'      => 'Credit Limit tidak boleh kosong.',
-                // 'top.required'              => 'TOP tidak boleh kosong.',
-                // 'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
+                'top.required'              => 'TOP tidak boleh kosong.',
+                'payment_account.required'  => 'Rekening Pembayaran tidak boleh kosong.',
                 'npwp.required'             => 'NPWP tidak boleh kosong.',
                 'delivery_address.required' => 'Delivery Address tidak boleh kosong.',
                 'billing_address.required'  => 'Billing Address tidak boleh kosong.',
@@ -392,7 +392,7 @@ class MitraCustomerController extends Controller
                         $customer->limit_credit    = $request->limit_credit;
                         $customer->payment_account = $request->payment_account;
                         $customer->status_approval = 3;
-                        // $customer->top             = $request->top;
+                        $customer->top             = $request->top;
                         // $customer->top_internal    = $top_internal;
                         $customer->save();
 
