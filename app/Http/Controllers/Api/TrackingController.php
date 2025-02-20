@@ -115,6 +115,7 @@ class TrackingController extends Controller
                 foreach ($querymitrasatpam as $row) {
                     $tracking[] = [
                         'status' => 'Keluar Pabrik',
+                        'code'   => '',
                         'date'   => $row->created_at,
                     ];
                 }
