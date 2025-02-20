@@ -22,8 +22,9 @@ class TrackingController extends Controller
         if($cek && $request->bearerToken()) {
             $tracking = [];
 
-            $mitramocode = $request->code;
+            $document_no = $request->code;
             
+            $mitramocode = '';
             $mitramarketingorder = '';
             $mitrasalesorder = '';
             $mitramod = '';
@@ -31,11 +32,13 @@ class TrackingController extends Controller
 
             //mitra praso
             $querymitramarketingorder = DB::select("
-                select distinct created_at from mitra_marketing_orders 
-                where code='" . $mitramocode . "' and void_date is null and deleted_at is null
+                select distinct code, document_no, created_at from mitra_marketing_orders 
+                where document_no='" . $document_no . "' and void_date is null and deleted_at is null
             ");
 
+            
             if ($querymitramarketingorder) {
+                $mitramocode = $querymitramarketingorder[0]->code;
                 foreach ($querymitramarketingorder as $row) {
                     $tracking[] = [
                         'document' => 'Sales Order Mitra',
@@ -119,7 +122,7 @@ class TrackingController extends Controller
 
             $tracking = json_decode(json_encode($tracking));
             if ($tracking) {
-                return apiResponse(true, 200, 'Data dokumen ditemukan', $tracking, []);
+                return apiResponse(true, 200, 'Data dokumen '.$document_no.' ditemukan', $tracking, []);
             } else {
                 return apiResponse(false, 404, 'Data dokumen tidak ditemukan', null, []);
             }
