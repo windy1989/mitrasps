@@ -175,7 +175,7 @@ class MitraMarketingOrderController extends Controller
                     DB::rollback();
                     $response = [
                         'status'    => 500,
-                        'message'   => $message
+                        'message'   => 'Error database.'
                     ];
                 }
             }
