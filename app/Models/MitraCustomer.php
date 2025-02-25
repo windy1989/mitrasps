@@ -37,12 +37,16 @@ class MitraCustomer extends Model{
         'status',           // Status: 2 Non Aktif, 1 Aktif
     ];
 
-    public function province(){
-        return $this->belongsTo('App\Models\Region','province_id','id')->withTrashed();
-    }
-
     public function user(){
         return $this->belongsTo('App\Models\User','user_id','id')->withTrashed();
+    }
+
+    public function mitra(){
+        return $this->belongsTo('App\Models\User', 'mitra_id','id')->withTrashed();
+    }
+
+    public function province(){
+        return $this->belongsTo('App\Models\Region','province_id','id')->withTrashed();
     }
 
     public function city(){
