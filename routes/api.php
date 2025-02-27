@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\TrackingController;
 use App\Http\Controllers\Api\MitraCustomerController;
 use App\Http\Controllers\Api\RegionController;
+use App\Http\Controllers\Api\MitraComplaintSalesController;
 
 Route::post('login',[HomeController::class, 'login']);
 Route::prefix('mitra_marketing_order')->group(function () {
@@ -25,7 +26,6 @@ Route::prefix('item_stock')->group(function () {
 Route::prefix('tracking')->group(function () {
     Route::post('/get_data', [TrackingController::class, 'getData']);
 });
-
 
 Route::get('/all_area/{provinceCode?}/{cityCode?}', [RegionController::class, 'getAreaBulk']);
 
@@ -52,4 +52,13 @@ Route::prefix('customer')->group(function (){
     Route::put('/{code}', [MitraCustomerController::class, 'update']);
     // Route::put('/{code}/restore', [MitraCustomerController::class, 'restore']);
     Route::delete('/{code}', [MitraCustomerController::class, 'delete']);
+});
+
+Route::prefix('complaint')->group(function (){
+    Route::get('/', [MitraComplaintSalesController::class, 'getDataAll']);
+    Route::get('/{code}', [MitraComplaintSalesController::class, 'getData']);
+    Route::post('/', [MitraComplaintSalesController::class, 'create']);
+    // Route::put('/{code}', [MitraComplaintSalesController::class, 'update']);
+    // Route::put('/{code}/restore', [MitraCustomerController::class, 'restore']);
+    // Route::delete('/{code}', [MitraComplaintSalesController::class, 'delete']);
 });
