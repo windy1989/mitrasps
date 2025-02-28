@@ -47,7 +47,10 @@ class MitraComplaintSalesController extends Controller
                     $detail_item  = MitraComplaintSalesDetail::where('mitra_complaint_sales_id', $row->id)->get();
                     $items= [];
                     if($detail_item){
+                        $qtytotal = 0;
                         foreach($detail_item as $item){
+                            $qtysubtotal = round($item->qty_color_mistake, 2) + round($item->qty_motif_mistake, 2) + round($item->qty_size_mistake, 2) + round($item->qty_broken, 2) + round($item->qty_mistake, 2);
+                            $qtytotal += $qtysubtotal;
                             $items[] = [
                                 'item_code'         => optional($item->item)->code,
                                 'item_name'         => optional($item->item)->name,
@@ -58,19 +61,33 @@ class MitraComplaintSalesController extends Controller
                                 'qty_wrong_size'    => round($item->qty_size_mistake, 2),
                                 'qty_broken'        => round($item->qty_broken, 2),
                                 'qty_mistake'       => round($item->qty_mistake, 2),
+                                'qty_subtotal'      => $qtysubtotal,
                             ];
                         }
                     }
                     
+                    if($row->document){
+                        $documents = explode(',',$row->document);
+                        foreach($documents as &$doc){
+                            if(Storage::exists($doc)){
+                                $doc = asset(Storage::url($doc));
+                            }
+                        }
+                    }
+                    else{
+                        $documents = 'Tidak ada';
+                    }
+
                     $data[] = [
                         'delivery_order_code' => $row->delivery_order_code,
                         'customer_code'       => $row->customer->mitraCustomer->code,
                         'customer_name'       => $row->customer->name,
                         'sales_name'          => $row->sales_name,
                         'note'                => $row->note,
-                        // 'document'            => explode(',',$row->document),
+                        'document'            => $documents,
                         'status'              => $row->statusRaw(),
                         'detail_item'         => $items,
+                        'total_item'          => $qtytotal ?? 0,
                     ];
                 }
                 return apiResponse(true, 200, 'Data komplain ditampilkan', $data, []);
@@ -94,7 +111,10 @@ class MitraComplaintSalesController extends Controller
                 $detail_item    = MitraComplaintSalesDetail::where('mitra_complaint_sales_id', $mitra_complaint->id)->get();
                     $items= [];
                     if($detail_item){
+                        $qtytotal = 0;
                         foreach($detail_item as $item){
+                            $qtysubtotal = round($item->qty_color_mistake, 2) + round($item->qty_motif_mistake, 2) + round($item->qty_size_mistake, 2) + round($item->qty_broken, 2) + round($item->qty_mistake, 2);
+                            $qtytotal += $qtysubtotal;
                             $items[] = [
                                 'item_code'         => optional($item->item)->code,
                                 'item_name'         => optional($item->item)->name,
@@ -105,8 +125,21 @@ class MitraComplaintSalesController extends Controller
                                 'qty_wrong_size'    => round($item->qty_size_mistake, 2),
                                 'qty_broken'        => round($item->qty_broken, 2),
                                 'qty_mistake'       => round($item->qty_mistake, 2),
+                                'qty_subtotal'      => $qtysubtotal,
                             ];
                         }
+                    }
+
+                    if($mitra_complaint->document){
+                        $documents = explode(',',$mitra_complaint->document);
+                        foreach($documents as &$doc){
+                            if(Storage::exists($doc)){
+                                $doc = asset(Storage::url($doc));
+                            }
+                        }
+                    }
+                    else{
+                        $documents = 'Tidak ada';
                     }
                     
                     $data[] = [
@@ -115,9 +148,10 @@ class MitraComplaintSalesController extends Controller
                         'customer_name'       => $mitra_complaint->customer->name,
                         'sales_name'          => $mitra_complaint->sales_name,
                         'note'                => $mitra_complaint->note,
-                        // 'document'            => explode(',',$row->document),
+                        'document'            => $documents,
                         'status'              => $mitra_complaint->statusRaw(),
                         'detail_item'         => $items,
+                        'total_item'          => $qtytotal ?? 0,
                     ];
             
                 return apiResponse(true, 200, 'Data komplain ditampilkan', $data, []);
@@ -135,25 +169,35 @@ class MitraComplaintSalesController extends Controller
             //path param
 
             $validation = Validator::make($request->all(), [
-                'delivery_order_code' => 'required',
-                'customer_code'       => 'required',
-                'qty_delivered'       => 'required|integer',
-                'sales_name'          => 'required',
-                'document.*'          => 'required|file|mimes:jpg,jpeg,png|max:2048',
-                'note'                => 'required',
-                'detail_item'         => 'required',
+                'delivery_order_code'           => 'required',
+                'customer_code'                 => 'required',
+                'qty_delivered'                 => 'required|integer',
+                'sales_name'                    => 'required',
+                'document.*'                    => 'required|file|mimes:jpg,jpeg,png|max:2048',
+                'note'                          => 'required',
+                'detail_item'                   => 'required',
+                'detail_item.qty_wrong_color'   => 'integer',
+                'detail_item.qty_wrong_pattern' => 'integer',
+                'detail_item.qty_wrong_size'    => 'integer',
+                'detail_item.qty_broken'        => 'integer',
+                'detail_item.qty_mistake'       => 'integer',
             ], [
-                'delivery_order_code.required' => 'Nomor Surat Jalan tidak boleh kosong.',
-                'customer_code.required'       => 'Customer tidak boleh kosong.',
-                'qty_delivered.required'       => 'Qty Terkirim tidak boleh kosong.',
-                'qty_delivered.integer'        => 'Qty Terkirim harus berupa angka.',
-                'sales_name.required'          => 'Nama Sales tidak boleh kosong.',
-                'document.*.required'          => 'Foto tidak boleh kosong.',
-                'document.*.file'              => 'Foto harus berupa file gambar.',
-                'document.*.mimes'             => 'Format file harus berupa .jpg, .jpeg, .png',
-                'document.*.max'               => 'File foto harus berukuran di bawah 2MB',
-                'note.required'                => 'Keterangan tidak boleh kosong.',
-                'detail_item.*.required'       => 'Detail item tidak boleh kosong.',
+                'delivery_order_code.required'          => 'Nomor Surat Jalan tidak boleh kosong.',
+                'customer_code.required'                => 'Customer tidak boleh kosong.',
+                'qty_delivered.required'                => 'Qty Terkirim tidak boleh kosong.',
+                'qty_delivered.integer'                 => 'Qty Terkirim harus berupa angka.',
+                'sales_name.required'                   => 'Nama Sales tidak boleh kosong.',
+                'document.*.required'                   => 'Foto tidak boleh kosong.',
+                'document.*.file'                       => 'Foto harus berupa file gambar.',
+                'document.*.mimes'                      => 'Format file harus berupa .jpg, .jpeg, .png',
+                'document.*.max'                        => 'File foto harus berukuran di bawah 2MB',
+                'note.required'                         => 'Keterangan tidak boleh kosong.',
+                'detail_item.*.required'                => 'Detail item tidak boleh kosong.',
+                'detail_item.qty_wrong_color.integer'   => 'Qty harus berupa bilangan bulat.',
+                'detail_item.qty_wrong_pattern.integer' => 'Qty harus berupa bilangan bulat.',
+                'detail_item.qty_wrong_size.integer'    => 'Qty harus berupa bilangan bulat.',
+                'detail_item.qty_broken.integer'        => 'Qty harus berupa bilangan bulat.',
+                'detail_item.qty_mistake.integer'       => 'Qty harus berupa bilangan bulat.',
             ]);
 
             if($validation->fails()) {
@@ -246,15 +290,14 @@ class MitraComplaintSalesController extends Controller
                     if($request->hasFile('document')){
                         $arrFile = [];
                         foreach($request->file('document') as $file){
-                            $arrFile[] = $file->store('public/mitra_complaints');
+                            $arrFile[] = $file->store('mitra_complaints','public');
                             $ctr++;
                         }
                         //Cek jumlah foto
-                        if($ctr>2){
+                        if($ctr>3){
                             foreach($arrFile as $file){
                                 if(Storage::exists($file)){
                                     Storage::delete($file);
-                                    // unlink(public_path("storage/").$file);
                                 }
                             }
                             return apiResponse(false, 400, "File foto yang dapat diupload maximum 3.", null, []);
@@ -264,8 +307,6 @@ class MitraComplaintSalesController extends Controller
                         return apiResponse(false, 400, "Komplain tidak dapat diproses", null, []); //Tidak ada foto
                     }
                     //End cek foto/dokumen
-
-                    return apiResponse(true, 418, "XXXX", null, []);
 
                     //Create header komplain
                     $query = MitraComplaintSales::create([
@@ -304,7 +345,6 @@ class MitraComplaintSalesController extends Controller
                             'qty_mistake'              => $item['qty_mistake'],
                         ]);
                     }
-                    
 
                     DB::commit();
                     return apiResponse(true, 201, "Data komplain berhasil disimpan", null, []);
