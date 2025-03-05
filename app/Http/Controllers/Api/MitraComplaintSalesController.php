@@ -69,7 +69,7 @@ class MitraComplaintSalesController extends Controller
                     if($row->document){
                         $documents = explode(',',$row->document);
                         foreach($documents as &$doc){
-                            if(Storage::exists($doc)){
+                            if(Storage::exists('public/'.$doc)){
                                 $doc = asset(Storage::url($doc));
                             }
                         }
@@ -133,7 +133,7 @@ class MitraComplaintSalesController extends Controller
                     if($mitra_complaint->document){
                         $documents = explode(',',$mitra_complaint->document);
                         foreach($documents as &$doc){
-                            if(Storage::exists($doc)){
+                            if(Storage::exists('public/'.$doc)){
                                 $doc = asset(Storage::url($doc));
                             }
                         }
